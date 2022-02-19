@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=e, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <title>add student</title>
+  </head>
+  <body>
+    <h1 class="text-center title">Agregar estudiante al sistema</h1>
+    <a
+      href="./"
+      class="btn btn-secondary text-center text-uppercase"
+      style="position: fixed; top: 0; left: 0"
+      >Regresar</a
+    >
+    <br />
+    <div class="card text-center" style="width: 18rem; margin: auto">
+      <form action="./successStudent/Estudiante" method="post">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <label> Nombre del estudiante </label>
+            <input
+              style="text-align: center"
+              id="name"
+              type="text"
+							name="name"
+              placeholder="Ingrese su nombre"
+              required
+            />
+          </li>
+        </ul>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <label> Apellido del estudiante </label>
+            <input
+              style="text-align: center"
+              id="lastName"
+              type="text"
+							name="lastName"
+              placeholder="Ingrese su apellido"
+              required
+            />
+          </li>
+        </ul>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <label> Carrera </label>
+            <input
+              style="text-align: center"
+              id="career"
+              type="text"
+							name="career"
+              placeholder="Carrera actual"
+              required
+            />
+          </li>
+        </ul>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <label> Correo </label>
+            <input
+              style="text-align: center"
+              id="emailAddress"
+              placeholder="Ingrese su correo"
+              type="text"
+							name="emailAddress"
+              required
+            />
+          </li>
+        </ul>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <label> Numero de identificaci&oacute;n </label>
+            <input
+              style="text-align: center"
+              id="IDNumber"
+              type="text"
+              placeholder="Ingrese su numero de ID"
+              required
+							name="IDNumber"
+            />
+          </li>
+        </ul>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <label> Tipo de documento </label>
+            <select name="IDType" id="IDType" class="form-select" aria-label="Default select example">
+              <option value="C.C" id="IDType">
+                C&eacute;dula de ciudadania
+              </option>
+              <option value="T.I" id="IDType">Tarjeta de identidad</option>
+            </select>
+          </li>
+        </ul>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <label> Codigo estudiantil </label>
+            <input
+              style="text-align: center"
+              id="codeStudent"
+              type="text"
+              placeholder="Ingrese su codigo"
+              required
+							name="codeStudent"
+            />
+          </li>
+        </ul>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <label> Fecha de nacimiento </label>
+            <input
+              style="text-align: center"
+              id="birthDate"
+              type="date"
+              value="2000-01-01"
+							name="birthDate"
+            />
+          </li>
+        </ul>
+        <!--
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+            <label class="form-check-label" for="flexSwitchCheckDefault">Audicionar como actor</label>
+          </li>
+        </ul>-->
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <button class="btn btn-success" type="submit">
+              Agregar estudiante
+            </button>
+          </li>
+        </ul>
+      </form>
+    </div>
+  </body>
+</html>
