@@ -16,13 +16,20 @@
         <table class="table table-bordered text-center">
             <thead class="thead-dark">
                 <tr>
-                    <th> Codigo audici&oacute;n </th>
-                    <th> Codigo estudiante </th>
+                    <th> Nombres </th>
                     <th> Obra </th>
+                    <th> Codigo estudiante </th>
                     <th> Fecha </th>
                 </tr>
             </thead>
             <tbody>
+                {% for audition in all_auditions  %}
+                <tr>
+                    {% for data in audition %}
+                        <td>{{ data }}</td>                                                                            
+                    {% endfor %}
+                </tr
+                {% endfor %}>
             </tbody>
         </table>
     </body>

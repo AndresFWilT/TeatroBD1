@@ -18,7 +18,7 @@ mail = Mail()
 
 @app.route('/con')
 def connection():
-    cdtls = getCredentialsDB()
+    cdtls = get_credentials_db()
     print(f"Credentials: {cdtls}")
     connection = cx_Oracle.connect(
         f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}')
@@ -76,7 +76,7 @@ def insertStudentAudition():
         sqlGetOccupedDate = f"""SELECT dateaudition FROM audition 
                             WHERE idaudition=(SELECT max(idaudition) FROM audition)"""
 
-        cdtls = getCredentialsDB()
+        cdtls = get_credentials_db()
         try:
             connection = cx_Oracle.connect(
                 f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}')
@@ -88,11 +88,7 @@ def insertStudentAudition():
             newDate = assignDate(occupedDate)
             sqlInsAudition = f"""INSERT INTO audition (code, idplay, dateaudition) 
                                 VALUES ('{_code}', '{_idplay}', timestamp '{newDate}')"""
-            cur.execute(sqlInsAudition)
-            ''' cur.execute("select * from person")
-            res = cur.fetchall()
-            for row in res:
-                print(row) '''
+            cur.execute(sqlInsAudition)            
             connection.commit()
             cur.close()
             connection.close()
@@ -111,13 +107,42 @@ def insertStudentAudition():
 
 @app.route('/viewStudent')
 def viewStudent():
-    return render_template('viewStudent.html')
+    sqlGetStudents = """SELECT p.names, p.surname, s.code, s.career FROM person p, student s 
+                        WHERE p.idnumber = s.idnumber"""
+    cdtls = get_credentials_db()
+    try:
+        connection = cx_Oracle.connect(
+            f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}')
+        cur = connection.cursor()
+        cur.execute(sqlGetStudents)
+        all_students = cur.fetchall()
+        cur.close()
+        connection.close()
+    except cx_Oracle.Error as error:
+        print('Error occurred:')
+        print(error)
+    return render_template('viewStudent.html', all_students=all_students)
 # path vista ver audicion
 
 
 @app.route('/viewAudition')
 def viewAudition():
-    return render_template('viewAudition.html')
+    sqlGetAuditions = """SELECT PE.names, PL.title, A.code, A.dateaudition
+                        FROM person PE, play PL, audition A, student S
+                        WHERE PE.idnumber = S.idnumber and S.code = A.code and A.idplay = PL.idplay"""
+    cdtls = get_credentials_db()
+    try:
+        connection = cx_Oracle.connect(
+            f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}')
+        cur = connection.cursor()
+        cur.execute(sqlGetAuditions)
+        all_auditions = cur.fetchall()
+        cur.close()
+        connection.close()
+    except cx_Oracle.Error as error:
+        print('Error occurred:')
+        print(error)
+    return render_template('viewAudition.html', all_auditions=all_auditions)
 
 # Logic for assign new date of audition
 def assignDate(occupedDate):
@@ -132,7 +157,7 @@ def assignDate(occupedDate):
 
 # Obetener credenciales
 
-def getCredentialsDB():
+def get_credentials_db():
     # Opening JSON file
     f = open('credentials.json')
     # returns JSON object as a dictionary
