@@ -1,8 +1,8 @@
 ## imports
 from flask import Flask, escape,render_template, request
 from flask_wtf import CSRFProtect
-import forms
 from flask_mail import Mail,Message
+import forms
 
 ##  Global
 app = Flask(__name__)
@@ -26,13 +26,13 @@ def addStudent():
 #path para insertar persona estudiante audicion
 @app.route('/succesStudent/<registro>',methods=['GET','POST'])
 def insertStudentfAudition(registro):
-    create_form = forms.CreateForm(request.form)
-    if request.method == 'POST' and create_form.validate():
-        print(create_form.email.data)
+    audition_form = forms.CreateForm(request.form)
+    if request.method == 'POST' and audition_form.validate():
+        print(audition_form.email.data)
         ## email sending
         msg = Message('TeatrosUD: Agendacion audicion',
         sender = app.config['MAIL_USERNAME'],
-        recipients=[create_form.email.data])
+        recipients=[audition_form.email.data])
     return render_template('successInsStud.html', registro=registro)
 
 #path vista ver estudiante
