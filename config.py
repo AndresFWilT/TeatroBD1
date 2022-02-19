@@ -12,3 +12,6 @@ class Config(object):
     MAIL_USERNAME = 'udTeatros@gmail.com'
     MAIL_PASSWORD = 'qwertyuiop_1234'
     #MAIL_PASSWORD = os.environ.get('PASSWORD_EMAIL_CF')
+
+class DevelopmentConfig(Config):
+    DEBUG = True

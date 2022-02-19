@@ -1,16 +1,14 @@
 # imports
-import re
-from unicodedata import name
-from flask import Flask, escape, render_template, request
-from flask_wtf import CSRFProtect
+from flask import Flask, render_template, request
 from flask_mail import Mail, Message
-import forms
+from config import DevelopmentConfig
 import cx_Oracle
 import json
 import os
 
 # Global
 app = Flask(__name__)
+app.config.from_object(DevelopmentConfig)
 mail = Mail()
 
 # Conexion a la base de datos
@@ -89,14 +87,23 @@ def insertStudentAudition():
             sqlInsAudition = f"""INSERT INTO audition (code, idplay, dateaudition) 
                                 VALUES ('{_code}', '{_idplay}', timestamp '{newDate}')"""
             cur.execute(sqlInsAudition)            
+            # email sending
+            print("Sending mail")
+            msg = Message('TeatrosUD: Agendacion audicion',
+                        sender=app.config['MAIL_USERNAME'],
+                        recipients=[_email])
+            msg.html = render_template('emailMessage.html', **{
+                    'names':_names,
+                    'surnames':_surname,
+                    'day': newDate.day,
+                    'month': newDate.month,
+                    'year': newDate.year,
+                    'time': newDate.hour+newDate.minute                   
+                })
+            mail.send(msg)
             connection.commit()
             cur.close()
             connection.close()
-            # email sending
-            print("Sending mail")
-            ''' msg = Message('TeatrosUD: Agendacion audicion',
-                        sender=app.config['MAIL_USERNAME'],
-                        recipients=[audition_form.email.data]) '''
             message = "Registro completado exitosamente"
         except cx_Oracle.Error as error:
             print('Error occurred:')
@@ -167,8 +174,5 @@ def get_credentials_db():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
-    assert os.path.exists('.env')  # for other environment variables...
-    # HARD CODE since default is production
-    os.environ['FLASK_ENV'] = 'development'
+    mail.init_app(app)
     app.run(debug=True)
