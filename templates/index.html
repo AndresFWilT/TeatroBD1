@@ -1,50 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=e, initial-scale=1.0"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css"/>
-    <title>Home</title>
-  </head>
-  <body>
-    <h1 class='text-center title'>¡Bienvenido al Sistema de gestion de teatro UD!</h1>
-    </br></br></br></br></br></br>
-    <div class="row text-center">
-      <div class="col-sm-6">
-          <div class="card">
-              <div class="card-body">
-                  <h5 class="card-title text-center">Agregar</h5>
-                  <p class="card-text">Agrega elementos a nuestro servicio</p>
-                  <div class="btn-group" role="group" aria-label="Basic example">
-                  <a href="./addStudent" class="btn btn-outline-success text-center text-uppercase">Estudiante</a>
-                  </div>
+{% extends 'base.html' %}
+{% block title %}
+  {{super()}}
+  Bienvenido
+{% endblock title %}
+{% block content %}
+  {{super()}}
+</br></br></br></br></br></br>
+<div class="row text-center">
+  <div class="col-sm-6">
+      <div class="card mx-auto" style="width: 30rem;">
+          <div class="card-body">
+              <h5 class="card-title text-center display-4">Inscripciones</h5>
+              <p class="card-text">Inscribete a algunos de nuestros servicios</p>
+              <div class="btn-group" role="group" aria-label="Basic example">
+              <a href="./addStudent" class="btn btn-outline-success text-center text-uppercase">Estudiante</a>
               </div>
           </div>
       </div>
-      <div class="col-sm-6">
-          <div class="card">
-              <div class="card-body">
-                  <h5 class="card-title text-center">Visualizar</h5>
-                  <p class="card-text">Visualiza las tablas del sistema</p>
-                  <div class="btn-group" role="group" aria-label="Basic example">
-                      <a href="./viewStudent" class="btn btn-outline-primary text-center text-uppercase">Estudiante</a>
-                  </div>
-                  <div class="btn-group" role="group" aria-label="Basic example">
-                    <a href="./viewAudition" class="btn btn-outline-primary text-center text-uppercase">Audici&oacute;n</a>
-                </div>
+  </div>
+  <div class="col-sm-6">
+      <div class="card mx-auto" style="width: 30rem;">
+          <div class="card-body">
+              <h5 class="card-title text-center display-4">Visualizar</h5>
+              <p class="card-text">Ver estudiantes, audiciones registradas en el sistema</p>
+              <div class="btn-group" role="group" aria-label="Basic example">
+                  <a href="./viewStudent" class="btn btn-outline-primary text-center text-uppercase">Estudiante</a>
               </div>
-          </div>
-      </div>
-      {% if registerSucced %}
-      <div class="col-sm-12">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title text-center">Resultado del registro</h5>
-                <p class="card-text">{{registerSucced}}</p>                
-              </div>
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <a href="./viewAudition" class="btn btn-outline-primary text-center text-uppercase">Audici&oacute;n</a>
             </div>
-      {% endif %}
-    </div>
-  </body>
-</html>
+          </div>
+      </div>
+  </div>
+  {% if registerSucced %}
+  <div class="col-sm-12">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title text-center">Resultado del registro</h5>
+            <p class="card-text">{{registerSucced}}</p>                
+          </div>
+        </div>
+  {% endif %}
+</div>
+{% endblock content %}

@@ -2,14 +2,15 @@
 from flask import Flask, render_template, request
 from flask_mail import Mail, Message
 from config import DevelopmentConfig
+from flask_bootstrap import Bootstrap
 import cx_Oracle
 import json
-import os
 
 # Global
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
 mail = Mail()
+bootstrap = Bootstrap(app)
 
 ## path for dataBase connection
 @app.route('/con')
