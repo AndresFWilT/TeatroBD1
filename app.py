@@ -229,7 +229,7 @@ def loginTeacher():
                 if password == _password:
                     # succesfull message
                     message = "Ingresando"
-                    return render_template('index.html', employee=employee)
+                    return render_template('assistanceViaticStudent.html', employee=employee)
                 else:
                     # succesfull message
                     message = "Datos no coinciden"
