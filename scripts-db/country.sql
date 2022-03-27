@@ -1,3 +1,5 @@
+/*COUNTRY_CODE, COUNTRY_NAME*/
+
 INSERT INTO country VALUES ('57', 'Colombia');
 INSERT INTO country VALUES ('34', 'España');
 INSERT INTO country VALUES ('44', 'Reino Unido');
