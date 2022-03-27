@@ -176,7 +176,7 @@ def view_audition():
         all_auditions = False
     return render_template('viewAudition.html', all_auditions=all_auditions)
 
-##  
+##  Asign date
 def assign_date(occupedDate):
     if occupedDate.hour >= 18:
         occupedDate = occupedDate.replace(hour=6)
@@ -187,9 +187,64 @@ def assign_date(occupedDate):
     newDate = occupedDate.replace(hour=occupedDate.hour + 2, minute=0)
     return newDate
 
-# Obetener credenciales
+##  path to view login
+@app.route('/loginTeacher')
+def view_loginTeacher():
+    return render_template("loginTeacher.html")
 
+## Path to verify the credentials of the teacher
+@app.route("/verifyTeacher", methods=['POST'])
+def loginTeacher():
+    if request.method == 'POST':
+        # From POST method, we request the inputs from the view
+        _email = request.form['emailAddress']
+        _password = request.form['password']
+        try:
+            # Query for the password for the DB
+            sqlGetPass = f"""SELECT em.identification_number FROM EMPLOYEE em WHERE em.email_address like '%{_email}%'"""
+            # Query for bring the data of the user
+            sqlGetEmployee = f"""SELECT * FROM EMPLOYEE em WHERE em.email_address like '%{_email}%'"""
+            # Bring the credentials from JSON to use in DB
+            cdtls = get_credentials_db()
+            try:
+                print("Entra a la conexion")
+                # Connection
+                connection = cx_Oracle.connect(
+                f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}')
+                cur = connection.cursor()
+                # Execute Querys
+                cur.execute(sqlGetPass)
+                # making commit for connection
+                connection.commit()
+                # fetch to get password
+                fetch = cur.fetchall()[0]
+                password = fetch[0]
+                # executing Query for user
+                cur.execute(sqlGetEmployee)
+                employee = cur.fetchall()
+                # closing cursor
+                cur.close()
+                # closing connection
+                connection.close()
+                if password == _password:
+                    # succesfull message
+                    message = "Ingresando"
+                    return render_template('index.html', employee=employee)
+                else:
+                    # succesfull message
+                    message = "Datos no coinciden"
+                    return render_template('loginTeacher.html', message=message)
+            except cx_Oracle.Error as error:
+                print('Error occurred:')
+                print(error)
+                #   error message for view
+                message = "No pudimos hacer su solicitud"
+        except:
+            message = "No encontramos tu cuenta"
+            return render_template('index.html', message=message)
+        return render_template('loginTeacher.html', message=message)
 
+# Getting credentials
 def get_credentials_db():
     # Opening JSON file
     f = open('credentials.json')
