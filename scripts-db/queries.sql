@@ -32,9 +32,7 @@ INSERT INTO typeplay (nametypeplay) VALUES ('Melodrama')
 -- Insertar una obra
 INSERT INTO play (idtypeplay, countrycode, title, releasedate) 
 VALUES (1, 44, 'Romeo y Julieta', to_date('31/10/1597','DD/MM/YYYY'))
-SELECT PE.names, PL.title, A.code, A.dateaudition FROM person PE, play PL, audition A, student S WHERE PE.idnumber = S.idnumber and S.code = A.code and A.idplay = PL.idplay ORDER BY a.dateaudition DESC
-
-
-INSERT INTO term (term_desc) VALUES ('2021-3');
-INSERT INTO term (term_desc) VALUES ('2022-1');
-INSERT INTO term (term_desc) VALUES ('2022-3');
+SELECT PE.names, PL.title, A.code, A.dateaudition 
+FROM person PE, play PL, audition A, student S 
+WHERE PE.idnumber = S.idnumber and S.code = A.code and A.idplay = PL.idplay 
+ORDER BY a.dateaudition DESC

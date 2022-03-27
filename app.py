@@ -8,7 +8,6 @@ import json
 
 # Global
 app = Flask(__name__)
-app.config.from_object(DevelopmentConfig)
 mail = Mail()
 bootstrap = Bootstrap(app)
 
@@ -34,7 +33,6 @@ def connection():
 ##  default server path
 @app.route('/')
 def init():
-    mail.init_app(app)
     return index()
 
 ##  path for index
@@ -147,6 +145,7 @@ def view_student():
     except cx_Oracle.Error as error:
         print('Error occurred:')
         print(error)
+        all_students = False
     return render_template('viewStudent.html', all_students=all_students)
 
 ##  path to view audition
@@ -174,6 +173,7 @@ def view_audition():
     except cx_Oracle.Error as error:
         print('Error occurred:')
         print(error)
+        all_auditions = False
     return render_template('viewAudition.html', all_auditions=all_auditions)
 
 ##  
@@ -201,4 +201,5 @@ def get_credentials_db():
 
 if __name__ == '__main__':
     mail.init_app(app)
+    app.config.from_object(DevelopmentConfig)
     app.run(debug=True)

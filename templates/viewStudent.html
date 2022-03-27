@@ -18,13 +18,17 @@
                 </tr>
             </thead>
             <tbody>
-                {% for student in all_students  %}
-                <tr>
-                    {% for data in student %}
-                        <td>{{ data }}</td>                                                                            
-                    {% endfor %}
-                </tr
-                {% endfor %}>
+                {% if all_students %}
+                    {% for student in all_students  %}
+                    <tr>
+                        {% for data in student %}
+                            <td>{{ data }}</td>                                                                            
+                        {% endfor %}
+                    </tr
+                    {% endfor %}>
+                {% else %}
+                    <h3>No se encontraron estudiantes</h3>
+                {% endif %}
             </tbody>
         </table>
   

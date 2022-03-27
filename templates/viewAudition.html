@@ -1,34 +1,33 @@
-{% extends 'base.html' %} 
+{% extends "base.html" %}
 {% block title %}
-  {{super()}}
+  {{ super() }}
   Audici&oacute;nes
-{% endblock title %} 
-{% block content %} 
-  {{super()}}
-  
-  <a
-  href="./"
-  class="btn btn-secondary text-center text-uppercase"
-  style="position: fixed; top: 0; left: 0"
-  >Regresar</a>
-    <h1 class='text-center text-uppercase'>Audici&oacute;nes programadas</h1>
-    <table class="table table-bordered text-center">
-        <thead class="thead-dark">
-            <tr>
-                <th> Nombres </th>
-                <th> Obra </th>
-                <th> Codigo estudiante </th>
-                <th> Fecha </th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for audition in all_auditions  %}
-            <tr>
-                {% for data in audition %}
-                    <td>{{ data }}</td>                                                                            
-                {% endfor %}
-            </tr
-            {% endfor %}>
-        </tbody>
-    </table>
+{% endblock title %}
+{% block content %}
+  {{ super() }}
+  <a href="./" class="btn btn-secondary text-center text-uppercase">Regresar</a>
+  <h1 class="text-center text-uppercase">Audici&oacute;nes programadas</h1>
+  <table class="table table-bordered text-center">
+    <thead class="thead-dark">
+      <tr>
+        <th>Nombres</th>
+        <th>Obra</th>
+        <th>Codigo estudiante</th>
+        <th>Fecha</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if all_auditions %}
+      
+        {% for audition in all_auditions %}
+        <tr>
+          {% for data in audition %}<td>{{ data }}</td>{% endfor %}
+        </tr>
+        {% endfor %}
+      {% else %}
+        <h3>No se encontraron audiciones</h3>
+      {% endif %}
+      
+    </tbody>
+  </table>
 {% endblock content %}
