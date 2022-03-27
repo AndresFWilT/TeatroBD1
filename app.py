@@ -5,12 +5,12 @@ from config import DevelopmentConfig
 from flask_bootstrap import Bootstrap
 import cx_Oracle
 import json
+app = Flask(__name__)
+import travel_expenses_routes
 
 # Global
-app = Flask(__name__)
 mail = Mail()
 bootstrap = Bootstrap(app)
-
 ## path for dataBase connection
 @app.route('/con')
 def connection():
