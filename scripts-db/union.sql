@@ -165,11 +165,7 @@ VALUES ('RADJ',0010,'FN','CTC',to_date('06/05/2022','DD/MM/YYYY'),to_date('06/05
 INSERT INTO type_unit VALUES ('AC', 'Unidad academica');
 INSERT INTO type_unit VALUES ('AD', 'Unidad administrativa');
 
-
-
 /* UNIT_CODE, ID_TYPE_UNIT, DEPENDENCY_UNIT, UNI_NAME */
-
-
 INSERT INTO unit (unit_code, id_type_unit, uni_name) 
 VALUES ('RCTRA', 'AD', 'Rectoria');
 

@@ -1,4 +1,5 @@
 # imports
+from logging import exception
 from flask import Flask, render_template, request
 from flask_mail import Mail, Message
 from config import DevelopmentConfig
@@ -203,7 +204,8 @@ def loginTeacher():
             # Query for the password for the DB
             sqlGetPass = f"""SELECT em.identification_number FROM EMPLOYEE em WHERE em.email_address like '%{_email}%'"""
             # Query for bring the data of the user
-            sqlGetEmployee = f"""SELECT * FROM EMPLOYEE em WHERE em.email_address like '%{_email}%'"""
+            sqlGetEmployee = f"""SELECT em.names, em.surnames, em.email_address, to_char(SYSDATE,'MONTH, YYYY') 
+                                 FROM EMPLOYEE em, DUAL WHERE em.email_address like '%{_email}%'"""
             # Bring the credentials from JSON to use in DB
             cdtls = get_credentials_db()
             try:
@@ -226,22 +228,20 @@ def loginTeacher():
                 cur.close()
                 # closing connection
                 connection.close()
-                if password == _password:
+                if str(password) == str(_password):
+                    print("accediendo")
                     # succesfull message
-                    message = "Ingresando"
                     return render_template('assistanceViaticStudent.html', employee=employee)
                 else:
                     # succesfull message
                     message = "Datos no coinciden"
-                    return render_template('loginTeacher.html', message=message)
             except cx_Oracle.Error as error:
                 print('Error occurred:')
                 print(error)
                 #   error message for view
                 message = "No pudimos hacer su solicitud"
-        except:
-            message = "No encontramos tu cuenta"
-            return render_template('index.html', message=message)
+        except Exception as e:
+            message = e
         return render_template('loginTeacher.html', message=message)
 
 # Getting credentials
