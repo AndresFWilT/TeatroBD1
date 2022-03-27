@@ -1,3 +1,5 @@
+/* ID_PLAYWRIGHT,  COUNTRY_CODE, PLAYWRIGHT_NAME*/
+
 INSERT INTO playwright VALUES ('FDL', '34', 'Federico García Lorca');
 INSERT INTO playwright VALUES ('WSP', '44', 'William Shakespeare');
 INSERT INTO playwright VALUES ('LDV', '34', 'Lope de Vega');
