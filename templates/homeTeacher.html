@@ -8,8 +8,8 @@
   <div class="card border-light mb-3" style="width: 18rem;">
     <div class="card-header text-center">Datos del docente</div>
     <ul class="list-group list-group-flush text-center">
-      <li class="list-group-item">Nombres: {{ employee[0][0] }}  {{ employee[0][1] }}</li>
-      <li class="list-group-item">Fecha actual: {{ employee[0][3] }}</li>
+      <li class="list-group-item">Nombres: {{ employee["employee_data"][0] }}  {{ employee["employee_data"][1] }}</li>
+      <li class="list-group-item">Fecha actual: {{ employee["employee_data"][3] }}</li>
     </ul>
   </div>
   <div class="col-auto p-5 text-center">
@@ -27,12 +27,20 @@
                    id="email"
                    type="hidden"
                    name="email"
-                   value="{{ employee[0][2] }}"
+                   value="false"
                    required/>
-            <div class="btn-group" role="group" aria-label="Basic example">
-              <button class="btn btn-outline-success text-center text-uppercase"
-                      type="submit">ir a asistencia</button>
-            </div>
+            {% if employee['attendance'] %}
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button class="btn btn-outline-success text-center text-uppercase"
+                        type="submit" >ir a asistencia</button>
+              </div>
+            {% else %}
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button class="btn btn-outline-success text-center text-uppercase"
+                        type="submit" disabled>ir a asistencia</button>
+              </div>
+            {% endif %}
+            
           </form>
         </div>
       </div>
@@ -51,7 +59,7 @@
                    id="email"
                    type="hidden"
                    name="email"
-                   value="{{ employee[0][2] }}"
+                   value=""
                    required/>
             <div class="btn-group" role="group" aria-label="Basic example">
               <button class="btn btn-outline-primary text-center text-uppercase"
@@ -75,7 +83,7 @@
                    id="email"
                    type="hidden"
                    name="email"
-                   value="{{ employee[0][2] }}"
+                   value=""
                    required/>
             <div class="btn-group" role="group" aria-label="Basic example">
               <button class="btn btn-outline-warning text-center text-uppercase"

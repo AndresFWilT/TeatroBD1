@@ -1,7 +1,7 @@
 from __main__ import app, session, redirect
 
 @app.route('/attendance', methods=['GET'])
-def test():
+def attendance():
     if not session.get("email"):
         return redirect("/loginTeacher")
     
