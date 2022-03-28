@@ -1,14 +1,15 @@
 # imports
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, redirect
 from flask_mail import Mail, Message
 from flask_session import Session
 from config import DevelopmentConfig
 from flask_bootstrap import Bootstrap
 import cx_Oracle
 import json
+app = Flask(__name__)
+import travel_expenses_routes
 
 # Global
-app = Flask(__name__)
 mail = Mail()
 bootstrap = Bootstrap(app)
 
