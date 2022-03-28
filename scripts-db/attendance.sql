@@ -18,3 +18,9 @@ FROM function
 WHERE function_date = to_date('25/03/2022', 'DD/MM/YYYY')
   AND start_time <= to_date('25/03/2022 09:00', 'DD/MM/YYYY HH24:MI')
   AND end_time >= to_date('25/03/2022 09:00', 'DD/MM/YYYY HH24:MI');
+
+
+/* id_student_attendance, student_code, id_play, id_function */
+-- Insertar en la tabla estudiante-asistencia
+INSERT INTO student_attendance (student_code, id_play, id_function) 
+VALUES ('', '', '')
