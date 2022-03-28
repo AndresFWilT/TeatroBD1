@@ -28,7 +28,6 @@ INSERT INTO country VALUES (44, 'United Kingdom')
 
 -- Insertar tipos de obra
 INSERT INTO typeplay (nametypeplay) VALUES ('Melodrama')
-
 -- Insertar una obra
 INSERT INTO play (idtypeplay, countrycode, title, releasedate) 
 VALUES (1, 44, 'Romeo y Julieta', to_date('31/10/1597','DD/MM/YYYY'))
@@ -46,3 +45,32 @@ from employee em where  em.email_address = 'sonia@correo.com' and em.identificat
 
 Select em.email_address, em.identification_number
 from employee em where  em.email_address = 'campoA' and em.identification_number = 'campoB';
+
+select distinct(s.student_names || ' ' || s.student_surnames) "Nombres"
+from Play pl, Function f, character_student sc, Character c, Student s
+where f.id_play=pl.id_play and pl.id_play=c.id_play  and c.id_character=sc.id_character and c.id_play=sc.id_play 
+and sc.student_code=s.student_code and pl.title='Romeo y Julieta' and f.FUNCTION_DATE=to_date('25/03/2022','DD/MM/YYYY') and f.START_TIME<(to_date('25/03/2022 09:00', 'DD/MM/YYYY hh24:mi'))and f.END_TIME>(to_date('25/03/2022 09:00', 'DD/MM/YYYY hh24:mi'));
+  
+-Login
+
+Select em.identification_number from employee em where en.email_address = 'campoA';
+
+Select em.email_address, em.identification_number
+from employee em where  em.email_address = 'sonia@correo.com' and em.identification_number = '51915567';
+
+Select em.email_address, em.identification_number
+from employee em where  em.email_address = 'campoA' and em.identification_number = 'campoB';
+
+
+
+select distinct(s.student_names || ' ' || s.student_surnames) "Nombres"
+from Play pl, Function f, character_student sc, Character c, Student s
+where f.id_play=pl.id_play and pl.id_play=c.id_play  and c.id_character=sc.id_character and c.id_play=sc.id_play 
+and sc.student_code=s.student_code and pl.title='Romeo y Julieta' and f.FUNCTION_DATE=to_date('25/03/2022','DD/MM/YYYY') and f.START_TIME<(to_date('25/03/2022 09:00', 'DD/MM/YYYY hh24:mi'))and f.END_TIME>(to_date('25/03/2022 09:00', 'DD/MM/YYYY hh24:mi'));
+  
+
+
+/*select distinct(s.student_names || ' ' || s.student_surnames) "Nombres"
+from Play pl, Function f, character_student sc, Character c, Student s
+where f.id_play=pl.id_play and pl.id_play=c.id_play  and c.id_character=sc.id_character and c.id_play=sc.id_play 
+and sc.student_code=s.student_code and pl.title='Romeo y Julieta' and f.FUNCTION_DATE=to_char('25/03/2022');*/
