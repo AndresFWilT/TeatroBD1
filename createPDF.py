@@ -47,11 +47,11 @@ class create_PDF:
             os.remove(saving_path+'.html')
 
 info = {"fecha":"28/03/2022",
-                "obra":"Chespirito es un mkon",
+                "obra":"Chespirito el chompirans",
                 "fechaInicio":"24/03/2022",
                 "fechaFin":"27/03/2022",
                 "estudiantes":"Josuelias Martinez hdez 202020202020 20172020",
-                "nombreProfesor":"Soni ordo",
+                "nombreProfesor":"Sonia ordones",
                 "cedula":"1010101010",
                 "facultad":"la poderosa ing. sis"}
 
