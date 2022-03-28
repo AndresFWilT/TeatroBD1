@@ -250,7 +250,8 @@ def loginTeacher():
                       "attendance": button_attendance
                     }
                     # succesfull message
-                    return render_template('homeTeacher.html', employee=employee)
+                    message = "Ingresando"
+                    return render_template('assistanceViaticStudent.html', employee=employee)
                 else:
                     message = "Datos no coinciden"
             except cx_Oracle.Error as error:
