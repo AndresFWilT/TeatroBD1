@@ -28,7 +28,6 @@ INSERT INTO country VALUES (44, 'United Kingdom')
 
 -- Insertar tipos de obra
 INSERT INTO typeplay (nametypeplay) VALUES ('Melodrama')
-
 -- Insertar una obra
 INSERT INTO play (idtypeplay, countrycode, title, releasedate) 
 VALUES (1, 44, 'Romeo y Julieta', to_date('31/10/1597','DD/MM/YYYY'))
