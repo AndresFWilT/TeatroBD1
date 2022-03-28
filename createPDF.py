@@ -3,7 +3,7 @@ from weasyprint import HTML, CSS
 import os
 
 class create_PDF:
-    
+    ## construct, template directory, dicctionary and dependency to aply
     def __init__(self,_template,_information,_dependency):
         self.template = _template
         self.information = _information
