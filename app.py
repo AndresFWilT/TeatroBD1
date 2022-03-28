@@ -216,8 +216,7 @@ def loginTeacher():
             sqlGetPass = f"""SELECT em.identification_number 
                              FROM EMPLOYEE em WHERE em.email_address like '%{_email}%'"""
             # Query for bring the data of the user
-            sqlGetEmployee = f"""SELECT em.names, em.surnames, em.email_address, 
-                                        to_char(SYSDATE,'DD/MM/YYYY hh24:mi') 
+            sqlGetEmployee = f"""SELECT em.names, em.surnames, em.email_address, to_char(SYSDATE,'MONTH, YYYY') 
                                  FROM EMPLOYEE em, DUAL WHERE em.email_address like '%{_email}%'"""
             # Bring the credentials from JSON to use in DB
             cdtls = get_credentials_db()
@@ -242,16 +241,12 @@ def loginTeacher():
                 # closing connection
                 connection.close()
                 if str(password) == str(_password):
-                    button_attendance = verify_button_attendance(employee[0][3])
-                    print(button_attendance)
+                    print("accediendo")
+
                     session["email"] = _email
-                    employee = {
-                      "employee_data": employee[0],
-                      "attendance": button_attendance
-                    }
                     # succesfull message
-                    message = "Ingresando"
-                    return render_template('assistanceViaticStudent.html', employee=employee)
+                    return render_template('homeTeacher.html',
+                                           employee=employee)
                 else:
                     message = "Datos no coinciden"
             except cx_Oracle.Error as error:
