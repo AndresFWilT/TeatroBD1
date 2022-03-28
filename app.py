@@ -286,7 +286,7 @@ def assign_date(occupedDate):
 
 
 def verify_button_attendance(date):
-    #date = '25/03/2022 09:00'
+    date = '25/03/2022 09:00'
     sqlGetFunction = f"""SELECT id_play, id_function
                         FROM function
                         WHERE function_date = to_date('{date[:10]}', 'DD/MM/YYYY')
