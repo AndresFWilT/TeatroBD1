@@ -1,7 +1,7 @@
 # imports
-from logging import exception
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 from flask_mail import Mail, Message
+from flask_session import Session
 from config import DevelopmentConfig
 from flask_bootstrap import Bootstrap
 import cx_Oracle
@@ -12,15 +12,17 @@ app = Flask(__name__)
 mail = Mail()
 bootstrap = Bootstrap(app)
 
-## path for dataBase connection
+
+## path for dataBase test connection
 @app.route('/con')
 def connection():
-    #   getting credentials from the method get_credentials_db   
+    #   getting credentials from the method get_credentials_db
     cdtls = get_credentials_db()
     print(f"Credentials: {cdtls}")
     #   making connection from impor cx_oracle, and passing the parameters into the dicctionary for conecction
     connection = cx_Oracle.connect(
-        f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}')
+        f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}'
+    )
     # making the cursor
     cur = connection.cursor()
     #   probing connection
@@ -31,20 +33,31 @@ def connection():
     connection.close()
     return col
 
+
 ##  default server path
 @app.route('/')
 def init():
     return index()
+
 
 ##  path for index
 @app.route('/index')
 def index():
     return render_template('index.html')
 
+
 ## path for view addStudent
 @app.route('/addStudent')
 def add_student():
     return render_template('addStudent.html')
+
+
+## path for log out
+@app.route('/logout')
+def logout():
+    session["email"] = None
+    return index()
+
 
 ## path to insert student audition
 @app.route('/saveStudent', methods=['POST'])
@@ -73,11 +86,12 @@ def insert_student_audition():
                             WHERE idaudition=(SELECT max(idaudition) FROM audition)"""
         #   we bring the credentials from the database
         cdtls = get_credentials_db()
-        #   try catch, if it's an error with the query or sending email mssg 
+        #   try catch, if it's an error with the query or sending email mssg
         try:
             #   connection
             connection = cx_Oracle.connect(
-                f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}')
+                f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}'
+            )
             cur = connection.cursor()
             #   execute querys
             cur.execute(sqlInsPerson)
@@ -85,7 +99,7 @@ def insert_student_audition():
             cur.execute(sqlGetOccupedDate)
             #   fetching occuped date
             occupedDate = cur.fetchone()[0]
-            #   
+            #
             newDate = assign_date(occupedDate)
             sqlInsAudition = f"""INSERT INTO audition (idnumber, code, idplay, dateaudition) 
                                 VALUES ('{_idnumber}','{_code}', '{_idplay}', timestamp '{newDate}')"""
@@ -97,15 +111,16 @@ def insert_student_audition():
                           sender=app.config['MAIL_USERNAME'],
                           recipients=[_email])
             #   html body message
-            msg.html = render_template('emailMessage.html', **{
-                'names': _names,
-                'surnames': _surname,
-                'day': newDate.day,
-                'month': newDate.month,
-                'year': newDate.year,
-                'hour': newDate.hour,
-                'minute': newDate.minute
-            })
+            msg.html = render_template(
+                'emailMessage.html', **{
+                    'names': _names,
+                    'surnames': _surname,
+                    'day': newDate.day,
+                    'month': newDate.month,
+                    'year': newDate.year,
+                    'hour': newDate.hour,
+                    'minute': newDate.minute
+                })
             #   sending email
             mail.send(msg)
             #   making commit for connection
@@ -123,6 +138,7 @@ def insert_student_audition():
             message = "Lo sentimos no pudimos agendar la audicion. Error en el registro"
         return render_template('resultInsertion.html', message=message)
 
+
 ##  path for view student
 @app.route('/viewStudent')
 def view_student():
@@ -134,7 +150,8 @@ def view_student():
     try:
         #   connection
         connection = cx_Oracle.connect(
-            f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}')
+            f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}'
+        )
         cur = connection.cursor()
         #   executing query
         cur.execute(sqlGetStudents)
@@ -149,6 +166,7 @@ def view_student():
         all_students = False
     return render_template('viewStudent.html', all_students=all_students)
 
+
 ##  path to view audition
 @app.route('/viewAudition')
 def view_audition():
@@ -162,7 +180,8 @@ def view_audition():
     try:
         #   connection
         connection = cx_Oracle.connect(
-            f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}')
+            f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}'
+        )
         cur = connection.cursor()
         #   executing query
         cur.execute(sqlGetAuditions)
@@ -177,6 +196,7 @@ def view_audition():
         all_auditions = False
     return render_template('viewAudition.html', all_auditions=all_auditions)
 
+
 ##  Asign date
 def assign_date(occupedDate):
     if occupedDate.hour >= 18:
@@ -188,10 +208,12 @@ def assign_date(occupedDate):
     newDate = occupedDate.replace(hour=occupedDate.hour + 2, minute=0)
     return newDate
 
+
 ##  path to view login
 @app.route('/loginTeacher')
 def view_loginTeacher():
     return render_template("loginTeacher.html")
+
 
 ## Path to verify the credentials of the teacher
 @app.route("/verifyTeacher", methods=['POST'])
@@ -202,7 +224,8 @@ def loginTeacher():
         _password = request.form['password']
         try:
             # Query for the password for the DB
-            sqlGetPass = f"""SELECT em.identification_number FROM EMPLOYEE em WHERE em.email_address like '%{_email}%'"""
+            sqlGetPass = f"""SELECT em.identification_number 
+                             FROM EMPLOYEE em WHERE em.email_address like '%{_email}%'"""
             # Query for bring the data of the user
             sqlGetEmployee = f"""SELECT em.names, em.surnames, em.email_address, to_char(SYSDATE,'MONTH, YYYY') 
                                  FROM EMPLOYEE em, DUAL WHERE em.email_address like '%{_email}%'"""
@@ -212,7 +235,8 @@ def loginTeacher():
                 print("Entra a la conexion")
                 # Connection
                 connection = cx_Oracle.connect(
-                f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}')
+                    f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}'
+                )
                 cur = connection.cursor()
                 # Execute Querys
                 cur.execute(sqlGetPass)
@@ -230,8 +254,11 @@ def loginTeacher():
                 connection.close()
                 if str(password) == str(_password):
                     print("accediendo")
+
+                    session["email"] = _email
                     # succesfull message
-                    return render_template('assistanceViaticStudent.html', employee=employee)
+                    return render_template('homeTeacher.html',
+                                           employee=employee)
                 else:
                     # succesfull message
                     message = "Datos no coinciden"
@@ -243,6 +270,7 @@ def loginTeacher():
         except Exception as e:
             message = e
         return render_template('loginTeacher.html', message=message)
+
 
 # Getting credentials
 def get_credentials_db():
@@ -257,4 +285,7 @@ def get_credentials_db():
 if __name__ == '__main__':
     mail.init_app(app)
     app.config.from_object(DevelopmentConfig)
+    app.config["SESSION_PERMANENT"] = False
+    app.config["SESSION_TYPE"] = "filesystem"
+    Session(app)
     app.run(debug=True)
