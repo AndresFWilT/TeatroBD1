@@ -35,3 +35,13 @@ SELECT PE.names, PL.title, A.code, A.dateaudition
 FROM person PE, play PL, audition A, student S 
 WHERE PE.idnumber = S.idnumber and S.code = A.code and A.idplay = PL.idplay 
 ORDER BY a.dateaudition DESC
+
+--Login
+
+Select em.identification_number from employee em where en.email_address = 'campoA';
+
+Select em.email_address, em.identification_number
+from employee em where  em.email_address = 'sonia@correo.com' and em.identification_number = '51915567';
+
+Select em.email_address, em.identification_number
+from employee em where  em.email_address = 'campoA' and em.identification_number = 'campoB';
