@@ -23,34 +23,37 @@ Attendance
     <tr>
       {% for j in range(0, 4) %}
         <td>{{ students[n][j] }}</td>
-        {% if students[n][4] == 'f' %}
           {% if j == 3 %}
           <form action="/markIndAtt" method="POST">
             <td>
-              <input style="text-align: center" id="codeStudent" type="hidden" name="codeStudent"
+              {% if check_attendance(students[n][0]) %}
+                <button class="btn btn-outline-primary text-center text-uppercase" disabled="true"><i
+                  class="bi bi-clipboard-check-fill"></i></button>
+              {% else %}
+                <input style="text-align: center" id="codeStudent" type="hidden" name="codeStudent"
                 value="{{ students[n][0] }}" required />
-                <input style="text-align: center" id="fields" type="hidden" name="fields"
-                value="{{ students }}" required />
               <button class="btn btn-outline-success text-center text-uppercase" type="submit"><i
                   class="bi bi-clipboard-check-fill"></i></button>
+              {% endif %}
             </td>
           </form>
-          {% endif %}
-        {% else %}
-          {% if j == 3 %}
-          <form action="/markIndAtt" method="POST">
-            <td>
-              <button class="btn btn-outline-primary text-center text-uppercase" disabled="true"><i
-                  class="bi bi-clipboard-check-fill"></i></button>
-            </td>
-          </form>
-          {% endif %}
-          {% endif %}
+        {% endif %}
       {% endfor %}
     </tr {% endfor %}>
+    
     {% else %}
     <h3>No se encontraron estudiantes</h3>
     {% endif %}
   </tbody>
 </table>
+{% if students %}
+<form action="/markAttendance" class="text-center" method="POST">
+  <input style="text-align: center" id="idPlay" type="hidden" name="idPlay"
+                value="{{ session["id_play"] }}" required />
+  <input style="text-align: center" id="idFunction" type="hidden" name="idFunction"
+                value="{{ session["id_function"] }}" required />
+  <button class="btn btn-outline-warning text-center text-uppercase" type="submit"><i
+    class="bi bi-clipboard-check-fill"> llenar lista de asistencia</i></button>
+</form>
+{% endif %}
 {% endblock content %}
