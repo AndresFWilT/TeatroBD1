@@ -1,0 +1,40 @@
+{% extends "baseLogin.html" %}
+{% block title %}
+{{ super() }}
+Attendance
+{% endblock title %}
+{% block content %}
+{{ super() }}
+<h1 class="text-center text-uppercase">Estudiantes inscritos</h1>
+
+<table class="table table-bordered text-center">
+  <thead class="thead-dark">
+    <tr>
+      <th>Nombre estudiante</th>
+      <th>Codigo</th>
+      <th>Secciones en las que participo</th>
+      <th>Horas que participo</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if students %}
+        {% for n in range(students| length) %}
+            <tr>
+                {% for j in range(0, 3) %}
+                    <td>{{ students[n][j] }}</td>
+                {% endfor %}
+            </tr {% endfor %}>
+    {% else %}
+        <h3>No se encontraron estudiantes</h3>
+    {% endif %}
+  </tbody>
+</table>
+{% if students %}
+<form action="/markAttendance" class="text-center" method="POST">
+  <input style="text-align: center" id="idPlay" type="hidden" name="idPlay"
+                value="{{ session["id_play"] }}" required />
+  <button class="btn btn-outline-success text-center text-uppercase" type="submit"><i
+    class="bi bi-cash">Generar PDF liquidaci&oacute;n</i></button>
+</form>
+{% endif %}
+{% endblock content %}

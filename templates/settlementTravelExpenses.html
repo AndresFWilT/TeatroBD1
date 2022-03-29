@@ -1,15 +1,15 @@
 <p style="text-align: center;">&nbsp;</p>
-<p>{{ fecha }}</p>
+<p>{{ information['fecha'] }}</p>
 <p>&nbsp;</p>
 <p>Facultad de Artes</p>
 <p>&nbsp;</p>
 <p>Estimado responsable de solicitudes</p>
-<p>La presente es para indicar que la liquidacion de viaticos de los estudiantes de la obra "{{ obra }}", realizada en la fecha {{ fechaInicio }} y terminada en {{fechaFin }}.</p>
+<p>La presente es para indicar que la liquidacion de viaticos de los estudiantes de la obra "{{ information['obra'] }}", realizada en la fecha {{ information['fechaInicio'] }} y terminada en {{ information['fechaFin'] }}.</p>
 <p>&nbsp;</p>
 <p>A continuacion dejare la lista de estudiantes, con parte informaci&oacute;n detallada de su participacion en dicha obra.</p>
 <br/>
-<table class="table table-bordered text-center">
-    <thead class="thead-dark">
+<table class="" style="text-align: center;">
+    <thead style="font-weight:bold;">
       <tr>
         <th>Nombre estudiante</th>
         <th>codigo</th>
@@ -20,13 +20,16 @@
       </tr>
     </thead>
     <tbody>
-        {% for i in range(get_students_matrix()| length) %}
-            {% for j in range(get_students_matrix()[i]| length) %}
-                <td>{{ get_students_matrix()[i][j] }}</td>
-            {% endfor %}
+        {% for i in range(students[0] | length) %}
+            <tr>
+                {% for j in range(students | length) %}
+                    <td>{{ students[j][i] }}</td>
+                {% endfor %}
+            </tr>
         {% endfor %}
     </tbody>
+</table>    
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-<p>Atentamente: {{ nombreProfesor }}<br />C.C: {{ cedula }}<br />{{ facultad }}</p>
+<p>Atentamente: {{ information['nombreProfesor'] }}<br />C.C: {{ information['cedula'] }}<br />{{ information['facultad'] }}</p>
