@@ -258,7 +258,6 @@ def loginTeacher():
                     button_attendance = verify_button_attendance(employee[0][3])
                     button_tra_exp = verify_button_tra_exp(employee[0][3])
                     button_certificates = verify_play_state(employee[0][3])
-                    print(button_certificates)
                     session["email"] = _email
                     if len(play)>0:
                         play = play[0][0]
@@ -311,7 +310,7 @@ def assign_date(occupedDate):
 
 # Check availability of attendance button
 def verify_button_attendance(date):
-    # date = '29/03/2022 09:00'
+    date = '29/03/2022 09:00'
     sqlGetFunction = f"""SELECT id_play, id_function
                          FROM function
                          WHERE function_date = to_date('{date[:10]}', 'DD/MM/YYYY')
