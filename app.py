@@ -380,6 +380,9 @@ def verify_play_state():
         print(error)
     return False
 
+def get_app():
+    return app
+
 if __name__ == '__main__':
     mail.init_app(app)
     app.config.from_object(DevelopmentConfig)
@@ -387,5 +390,3 @@ if __name__ == '__main__':
     app.config["SESSION_TYPE"] = "filesystem"
     Session(app)
     app.run(debug=True)
-
-

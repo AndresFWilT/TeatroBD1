@@ -1,4 +1,4 @@
-from __main__ import app
+from app import get_app
 from jinja2 import Environment, FileSystemLoader
 from weasyprint import HTML, CSS
 import os
@@ -50,6 +50,8 @@ class create_PDF:
     def get_students_matrix(self):
         return self.students   
 
+    get_app().jinja_env.globals.update(get_students_matrix=get_students_matrix)
+
 
 info = {
     "fecha": "28/03/2022",
@@ -81,4 +83,3 @@ x = create_PDF(
     info, 'expenses',estudiantes)
 x.creation()
 
-app.jinja_env.globals.update(get_students_matrix=x.get_students_matrix)
