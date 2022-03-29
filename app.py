@@ -216,8 +216,11 @@ def loginTeacher():
             sqlGetPass = f"""SELECT em.identification_number 
                              FROM EMPLOYEE em WHERE em.email_address like '%{_email}%'"""
             # Query for bring the data of the user
-            sqlGetEmployee = f"""SELECT em.names, em.surnames, em.email_address, to_char(SYSDATE,'DD/MM/YYYY HH24:MI') 
+            sqlGetEmployee = f"""SELECT em.names, em.surnames, em.email_address, 
+                                        to_char(SYSDATE,'DD/MM/YYYY HH24:MI'), em.employee_code
                                  FROM EMPLOYEE em, DUAL WHERE em.email_address like '%{_email}%'"""
+            
+            
             # Bring the credentials from JSON to use in DB
             cdtls = get_credentials_db()
             try:
@@ -227,15 +230,23 @@ def loginTeacher():
                 )
                 cur = connection.cursor()
                 # Execute Querys
-                cur.execute(sqlGetPass)
-                # making commit for connection
-                connection.commit()
+                cur.execute(sqlGetPass)                
                 # fetch to get password
                 fetch = cur.fetchall()[0]
                 password = fetch[0]
                 # executing Query for user
                 cur.execute(sqlGetEmployee)
                 employee = cur.fetchall()
+                # Query for get active play
+                sqlGetPlay = f"""SELECT P.title
+                                 FROM play P, stage_play_staff STS, Employee E
+                                 WHERE P.id_play = STS.id_play
+                                    AND STS.employee_code = E.employee_code
+                                    AND STS.unit_code = E.unit_code
+                                    AND P.state = 1
+                                    AND E.employee_code = 'SNOD'"""
+                cur.execute(sqlGetPlay)
+                play = cur.fetchall()
                 # closing cursor
                 cur.close()
                 # closing connection
@@ -245,11 +256,16 @@ def loginTeacher():
                     button_tra_exp = verify_button_tra_exp(employee[0][3])
                     button_certificates = verify_play_state()
                     session["email"] = _email
+                    if len(play)>0:
+                        play = play[0][0]
+                    else:
+                        play = ""
                     employee = {
                       "employee_data": employee[0],
                       "attendance": button_attendance,
                       "exp_tra": button_tra_exp,
-                      "certi": button_certificates
+                      "certi": button_certificates,
+                      "title": play
                     }
                     # succesfull message
                     return render_template('homeTeacher.html', employee=employee)
@@ -355,7 +371,6 @@ def verify_play_state():
         cur = connection.cursor()
         cur.execute(sqlGetPlay)
         play = cur.fetchall()
-        print(play)
         cur.close()
         connection.close()
         if len(play) > 0:

@@ -37,3 +37,12 @@ WHERE function_date = (SELECT max(function_date)
 SELECT id_play
 FROM play
 WHERE state = 1;
+
+-- Obtener la obra activa de un docente
+SELECT P.title
+FROM play P, stage_play_staff STS, Employee E
+WHERE P.id_play = STS.id_play
+  AND STS.employee_code = E.employee_code
+  AND STS.unit_code = E.unit_code
+  AND P.state = 1
+  AND E.employee_code = 'SNOD';
