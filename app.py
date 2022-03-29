@@ -32,11 +32,9 @@ def connection():
     #   probing connection
     cur.execute("SELECT 'Hello, World from Oracle DB!' FROM DUAL")
     col = cur.fetchone()[0]
-    
-    sendMail()
-    
     cur.close()
     connection.close()
+    sendMail()
     return col
 
 
@@ -693,7 +691,7 @@ def certify_selected_student_play():
 def sendMail():
     msg = Message('TeatrosUD: Agendacion audicion',
                           sender=app.config['MAIL_USERNAME'],
-                          recipients=["josuenunezprada@gmail.com"])
+                          recipients=['andresfwilchest@gmail.com'])
             #   html body message
     msg.html = render_template(
             'emailMessage.html', **{
@@ -707,19 +705,18 @@ def sendMail():
                 }
             )
     #   sending email
-    try:
-        with app.open_resource('expenses/RomeoyJulieta.pdf') as fp:  
-            msg.attach("expenses/RomeoyJulieta.pdf", "application/pdf", fp.read())  
-        mail.send(msg)
-    except:
-        print("Error")
+    with app.open_resource('expenses/RomeoyJulieta.pdf') as fp:  
+        msg.attach("expenses/RomeoyJulieta.pdf", "application/pdf", fp.read())  
+    mail.send(msg)
+    print("Error")
     print("Sended!")
 
 
 if __name__ == '__main__':
-    mail.init_app(app)
     app.config.from_object(DevelopmentConfig)
     app.config["SESSION_PERMANENT"] = False
     app.config["SESSION_TYPE"] = "filesystem"
     Session(app)
+    mail.init_app(app)
     app.run(debug=True)
+    
