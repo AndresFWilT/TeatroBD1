@@ -1,22 +1,21 @@
+from __main__ import app
 from jinja2 import Environment, FileSystemLoader
 from weasyprint import HTML, CSS
 import os
 
-
 class create_PDF:
-    ## construct, template directory, dicctionary and dependency to aply
-    def __init__(self, _template, _information, _dependency):
+
+    ## construct, template directory, basic info dicctionary, dependency to apply and students matrix
+    def __init__(self, _template, _information, _dependency, _students):
         self.template = _template
         self.information = _information
         self.dependency = _dependency
+        self.students = _students
 
     ## Function to create a PDF
     def creation(self):
         # first we take the name of the template
         template_name = self.template.split('/')[-1]
-
-        # we give to the OS the dll directory of GTK3 for weasyprint (only or Win)
-        #os.add_dll_directory(r"C:/Program Files/GTK3-Runtime Win64/bin")
 
         # use the environment loeader FilSystem for the directory templates
         env = Environment(loader=FileSystemLoader('templates'))
@@ -47,6 +46,9 @@ class create_PDF:
         # deleting the HTML
         if os.path.exists(saving_path + '.html'):
             os.remove(saving_path + '.html')
+    
+    def get_students_matrix(self):
+        return self.students   
 
 
 info = {
@@ -54,13 +56,29 @@ info = {
     "obra": "Chespirito el chompirans",
     "fechaInicio": "24/03/2022",
     "fechaFin": "27/03/2022",
-    "estudiantes": "Josuelias Martinez hdez 202020202020 20172020",
     "nombreProfesor": "Sonia ordones",
     "cedula": "1010101010",
-    "facultad": "la poderosa ing. sis"
+    "facultad": "la poderosa ing. sis",
 }
+
+nombre_est = ["Andres Wilches","Cristian Ovayes"]
+correo_est = ["andres@correo.com","cristian@correo.com"]
+codigo_est = [20172020114,20172020068]
+cantidad_func = [3,2]
+horas_part = [25,15]
+periodo_tiempo = [20,16]
+
+estudiantes = [nombre_est,
+                codigo_est,
+                correo_est,
+                cantidad_func,
+                horas_part,
+                periodo_tiempo
+]
 
 x = create_PDF(
     'C:/proyectos/TeatroUdistrital/Flask/teatroudbd/templates/settlementTravelExpenses.html',
-    info, 'expenses')
+    info, 'expenses',estudiantes)
 x.creation()
+
+app.jinja_env.globals.update(get_students_matrix=x.get_students_matrix)

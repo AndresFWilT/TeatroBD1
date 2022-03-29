@@ -6,8 +6,26 @@
 <p>Estimado responsable de solicitudes</p>
 <p>La presente es para indicar que la liquidacion de viaticos de los estudiantes de la obra "{{ obra }}", realizada en la fecha {{ fechaInicio }} y terminada en {{fechaFin }}.</p>
 <p>&nbsp;</p>
-<p>A continuacion dejare la lista de estudiantes, con parte de su informacion personal, que participaron en dicha obra.</p>
-<p>{{ estudiantes }}</p>
+<p>A continuacion dejare la lista de estudiantes, con parte informaci&oacute;n detallada de su participacion en dicha obra.</p>
+<br/>
+<table class="table table-bordered text-center">
+    <thead class="thead-dark">
+      <tr>
+        <th>Nombre estudiante</th>
+        <th>codigo</th>
+        <th>Correo</th>
+        <th>Cantidad de funciones</th>
+        <th>Horas participacion</th>
+        <th>Periodo de tiempo</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for i in range(get_students_matrix()| length) %}
+            {% for j in range(get_students_matrix()[i]| length) %}
+                <td>{{ get_students_matrix()[i][j] }}</td>
+            {% endfor %}
+        {% endfor %}
+    </tbody>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
