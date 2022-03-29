@@ -5,7 +5,7 @@
   {% endblock title %} 
 {% block content %} 
   {{super()}}
-        <h1 class='text-center text-uppercase'>Estudiantes inscritos</h1>
+        <h1 class="text-center text-uppercase">Estudiantes inscritos</h1>
         <table class="table table-bordered text-center">
             <thead class="thead-dark">
                 <tr>
@@ -18,7 +18,7 @@
             </thead>
             <tbody>
                 {% if all_students %}
-                    {% for student in all_students  %}
+                    {% for student in all_students %}
                     <tr>
                         {% for data in student %}
                             <td>{{ data }}</td>                                                                            
