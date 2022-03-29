@@ -10,7 +10,6 @@ import os
 import cx_Oracle
 import json
 app = Flask(__name__)
-import attendance
 
 # Global
 mail = Mail()
@@ -263,6 +262,7 @@ def loginTeacher():
                     session["email"] = _email
                     if len(play)>0:
                         play = play[0][0]
+                        session["title"] = play
                     else:
                         play = ""
                     employee = {
@@ -311,7 +311,7 @@ def assign_date(occupedDate):
 
 # Check availability of attendance button
 def verify_button_attendance(date):
-    date = '29/03/2022 09:00'
+    # date = '29/03/2022 09:00'
     sqlGetFunction = f"""SELECT id_play, id_function
                          FROM function
                          WHERE function_date = to_date('{date[:10]}', 'DD/MM/YYYY')
@@ -339,7 +339,7 @@ def verify_button_attendance(date):
 
 # Check availability of travel expenses button
 def verify_button_tra_exp(date):
-    date = '07/05/2022 09:00'
+    # date = '07/05/2022 09:00'
     _id_play = session["id_play"]
     sqlGetFunction = f"""SELECT id_function
                          FROM function
