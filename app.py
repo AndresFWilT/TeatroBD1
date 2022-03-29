@@ -10,6 +10,7 @@ import os
 import cx_Oracle
 import json
 app = Flask(__name__)
+import attendance
 
 # Global
 mail = Mail()
@@ -338,7 +339,7 @@ def verify_button_attendance(date):
 
 # Check availability of travel expenses button
 def verify_button_tra_exp(date):
-    # date = '07/05/2022 09:00'
+    date = '07/05/2022 09:00'
     _id_play = session["id_play"]
     sqlGetFunction = f"""SELECT id_function
                          FROM function
