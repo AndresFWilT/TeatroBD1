@@ -274,21 +274,69 @@ select (first_name || ' ' || last_name) "Nombre Empleado"
 from s_emp where title in (select title
 from s_emp where lower(first_name || ' ' || last_name) = 'carmen velasquez');       
 
-select SYSDATE,        
+select distinct SYSDATE,        
        pl.title,
        s.student_names, 
        s.student_surnames,
        s.email_address2,
        s.student_code,
-       u.uni_name
+       u.uni_name,
+       SUM(distinct(to_char(f.END_TIME,'HH24') - to_char(f.START_TIME,'HH24'))),
+       COUNT(distinct(s.student_code))              
 from Play pl,
      Student s,
      Character c,
      character_student cs,
-     unit u     
+     unit u,
+     function f,
+     Student_Attendance sa     
 where pl.id_play = c.id_play
        and c.id_character = cs.id_character
        and c.id_play = cs.id_play
        and cs.student_code = s.student_code       
        and s.unit_code = u.unit_code
-       and pl.title = 'Romeo y Julieta';
+       and pl.title = 'Romeo y Julieta'
+       and f.id_play=sa.id_play
+       and f.id_function=sa.id_function
+       and sa.student_code=s.student_code
+group by pl.title,
+       s.student_names, 
+       s.student_surnames,
+       s.email_address2,
+       s.student_code,
+       u.uni_name;
+
+
+
+
+select distinct SYSDATE,        
+       pl.title,
+       s.student_names, 
+       s.student_surnames,
+       s.email_address2,
+       s.student_code,
+       u.uni_name,
+       SUM(distinct(to_char(f.END_TIME,'HH24') - to_char(f.START_TIME,'HH24'))),
+       COUNT(distinct(s.student_code))              
+from Play pl,
+     Student s,
+     Character c,
+     character_student cs,
+     unit u,
+     function f,
+     Student_Attendance sa     
+where pl.id_play = c.id_play
+       and c.id_character = cs.id_character
+       and c.id_play = cs.id_play
+       and cs.student_code = s.student_code       
+       and s.unit_code = u.unit_code
+       and pl.title = 'Romeo y Julieta'
+       and f.id_play=sa.id_play
+       and f.id_function=sa.id_function
+       and sa.student_code=s.student_code
+group by pl.title,
+       s.student_names, 
+       s.student_surnames,
+       s.email_address2,
+       s.student_code,
+       u.uni_name;
