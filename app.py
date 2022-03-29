@@ -521,9 +521,7 @@ def liquidation_expenses():
         print('Error occurred: in verify play state' )
         print(error)
 
-
-    # Prueba
-
+    # information dicctionary for header, footer and part of the content of the PDF
     info = {
         "fecha": dates_title[0][0],
         "obra": dates_title[0][3],
@@ -534,14 +532,13 @@ def liquidation_expenses():
         "facultad": teacher_data[0][2],
         }
 
-    print(len(students_info))
-    print(len(students_info[0]))
-
+    # calls the function pdf_creation
     PDF_creation('C:/proyectos/TeatroUdistrital/Flask/teatroudbd/templates/settlementTravelExpenses.html',
         info, 'expenses',students_info)
     return redirect('/tExpenses')
 
 ## Function to create a PDF
+# directory of template, information, dependency, students info
 def PDF_creation(template, information, dependency,students):
     # first we take the name of the template
     template_name = template.split('/')[-1]
@@ -576,6 +573,82 @@ def PDF_creation(template, information, dependency,students):
     if os.path.exists(saving_path + '.html'):
         os.remove(saving_path + '.html')
 
+# Map to go to view, certificates
+@app.route('/certificates', methods=['POST'])
+def certificates():
+    if not session.get("email"):
+        return redirect("/loginTeacher")
+    
+    # Get play's of the teacher
+    sqlGetPlays = f"""Select p.title
+                        from  play p, Stage_Play_Staff sps, employee e
+                        where p.id_play=sps.id_play
+                        and sps.employee_code=e.employee_code
+                        and sps.unit_code=e.unit_code
+                        and e.email_address like '{session["email"]}'"""
+    
+    cdtls = get_credentials_db()
+    try:
+        connection = cx_Oracle.connect(
+            f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}'
+        )
+        cur = connection.cursor()
+        cur.execute(sqlGetPlays)
+        plays = cur.fetchall()
+        cur.close()
+        connection.close()
+        
+    except cx_Oracle.Error as error:
+        print('Error occurred:')
+        print(error)
+    return render_template('certificate.html', plays = plays)
+
+# Map to search student plays, w student code
+@app.route('/searchStudent', methods=['POST'])
+def search_student():
+    if not session.get("email"):
+        return redirect("/loginTeacher")
+    # code from POST
+    _code = request.form["code"]
+
+    # Get play's of student with ode
+    sqlGetStudentPlays = f"""select p.title
+                            from play p, Character c, character_student cs, student S
+                            where p.id_play = c.id_play
+                                and c.id_Character=cs.id_Character
+                                and c.id_play=cs.id_play
+                                and cs.student_code=s.student_code
+                                and s.student_code = {_code}"""
+    
+    # Get play's of the teacher
+    sqlGetPlays = f"""Select p.title
+                        from  play p, Stage_Play_Staff sps, employee e
+                        where p.id_play=sps.id_play
+                        and sps.employee_code=e.employee_code
+                        and sps.unit_code=e.unit_code
+                        and e.email_address like '{session["email"]}'"""
+    
+    cdtls = get_credentials_db()
+    try:
+        connection = cx_Oracle.connect(
+            f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}'
+        )
+        cur = connection.cursor()
+        # get the plays of student
+        cur.execute(sqlGetStudentPlays)
+        students = cur.fetchall()
+        # get the plays of the teacher to recharge the page
+        cur.execute(sqlGetPlays)
+        plays = cur.fetchall()
+        cur.close()
+        connection.close()
+
+        print(students)
+        
+    except cx_Oracle.Error as error:
+        print('Error occurred:')
+        print(error)
+    return render_template('certificate.html', plays = plays,students = students)
 
 if __name__ == '__main__':
     mail.init_app(app)
