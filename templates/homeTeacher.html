@@ -48,16 +48,18 @@
               <p class="card-text">
                 Visualiza a tus estudiantes y genera una liquidacion de viaticos
               </p>
-              <input style="text-align: center"
-                     id="email"
-                     type="hidden"
-                     name="email"
-                     value=""
-                     required/>
-              <div class="btn-group" role="group" aria-label="Basic example">
-                <button class="btn btn-outline-primary text-center text-uppercase"
-                        type="submit">ir a viaticos</button>
-              </div>
+              {% if employee['exp_tra'] %}
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <button class="btn btn-outline-primary text-center text-uppercase"
+                          type="submit">ir a viaticos</button>
+                </div>
+              {% else %}
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <button class="btn btn-outline-primary text-center text-uppercase"
+                          type="submit" disabled>ir a viaticos</button>
+                </div>
+              {% endif %}
+              
             </form>
           </div>
         </div>

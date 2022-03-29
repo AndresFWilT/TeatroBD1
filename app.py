@@ -216,7 +216,7 @@ def loginTeacher():
             sqlGetPass = f"""SELECT em.identification_number 
                              FROM EMPLOYEE em WHERE em.email_address like '%{_email}%'"""
             # Query for bring the data of the user
-            sqlGetEmployee = f"""SELECT em.names, em.surnames, em.email_address, to_char(SYSDATE,'MONTH, YYYY') 
+            sqlGetEmployee = f"""SELECT em.names, em.surnames, em.email_address, to_char(SYSDATE,'DD/MM/YYYY HH24:MI') 
                                  FROM EMPLOYEE em, DUAL WHERE em.email_address like '%{_email}%'"""
             # Bring the credentials from JSON to use in DB
             cdtls = get_credentials_db()
@@ -241,16 +241,17 @@ def loginTeacher():
                 # closing connection
                 connection.close()
                 if str(password) == str(_password):
-                    print("accediendo")
                     button_attendance = verify_button_attendance(employee[0][3])
+                    button_tra_exp = verify_button_tra_exp(employee[0][3])
                     session["email"] = _email
                     employee = {
                       "employee_data": employee[0],
-                      "attendance": button_attendance
+                      "attendance": button_attendance,
+                      "exp_tra": button_tra_exp
                     }
+                    print(button_tra_exp)
                     # succesfull message
-                    return render_template('homeTeacher.html',
-                                           employee=employee)
+                    return render_template('homeTeacher.html', employee=employee)
                 else:
                     message = "Datos no coinciden"
             except cx_Oracle.Error as error:
@@ -285,13 +286,15 @@ def assign_date(occupedDate):
     return newDate
 
 
+# Check availability of attendance button
 def verify_button_attendance(date):
-    date = '25/03/2022 09:00'
+    #date = '25/03/2022 09:00'
+    print(date)
     sqlGetFunction = f"""SELECT id_play, id_function
-                        FROM function
-                        WHERE function_date = to_date('{date[:10]}', 'DD/MM/YYYY')
-                        AND start_time <= (to_date('{date}', 'DD/MM/YYYY HH24:MI'))
-                        AND end_time >= (to_date('{date}', 'DD/MM/YYYY HH24:MI'))"""
+                         FROM function
+                         WHERE function_date = to_date('{date[:10]}', 'DD/MM/YYYY')
+                           AND start_time <= (to_date('{date}', 'DD/MM/YYYY HH24:MI'))
+                           AND end_time >= (to_date('{date}', 'DD/MM/YYYY HH24:MI'))"""
     cdtls = get_credentials_db()
     try:
         connection = cx_Oracle.connect(
@@ -306,6 +309,35 @@ def verify_button_attendance(date):
         if len(function) > 0:
             session["id_play"] = function[0][0]
             session["id_function"] = function[0][1]
+            return True
+    except cx_Oracle.Error as error:
+        print('Error occurred:')
+        print(error)
+    return False
+
+
+# Check availability of travel expenses button
+def verify_button_tra_exp(date):
+    _id_play = session["id_play"]
+    sqlGetFunction = f"""SELECT id_function
+                         FROM function
+                         WHERE function_date = (SELECT max(function_date)
+                                                FROM function
+                                                WHERE id_play = 'RADJ')
+                           AND id_play = '{_id_play}'
+                           AND to_date('{date}', 'DD/MM/YYYY')"""
+    cdtls = get_credentials_db()
+    try:
+        connection = cx_Oracle.connect(
+            f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}'
+        )
+        cur = connection.cursor()
+        cur.execute(sqlGetFunction)
+        function = cur.fetchall()
+        print(function)
+        cur.close()
+        connection.close()
+        if len(function) > 0:
             return True
     except cx_Oracle.Error as error:
         print('Error occurred:')
