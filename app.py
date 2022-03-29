@@ -661,7 +661,7 @@ def certify_selected_student_play():
 
     # Play name selected from template
     _play_name = request.form["play_name"]
-    
+    print(_play_name)
     # Get play's of the teacher
     sqlGetPlays = f"""Select p.title
                         from  play p, Stage_Play_Staff sps, employee e
