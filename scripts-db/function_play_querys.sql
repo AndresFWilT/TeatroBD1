@@ -46,3 +46,76 @@ WHERE P.id_play = STS.id_play
   AND STS.unit_code = E.unit_code
   AND P.state = 1
   AND E.employee_code = 'SNOD';
+
+-- Obtener listado de sesiones en las que participo un estudiante
+-- Obtener datos de estudiantes de una obra
+SELECT S.student_names,
+  student_surnames,
+FROM student S,
+  character_student CS,
+  character C,
+  play P
+WHERE S.student_code = CS.student_code
+  AND CS.id_character = C.id_character
+  AND C.id_play = P.id_play
+  AND P.id_play = 'RADJ';
+-- Obtener num de sesiones de un estudiante
+SELECT COUNT(student_code)
+FROM student_attendance SA
+WHERE SA.student_code = '20172020071'
+  AND id_play = 'RADJ';
+-- Obtener num de horas de un estudiante
+SELECT ST.student_code sum(to_char(F.end_time, 'HH24') - to_char(F.start_time, 'HH24'))
+FROM function F, student_attendance ST
+WHERE ST.id_play = F.id_play
+  AND ST.id_function = F.id_function;
+
+
+SELECT COUNT(student_code)
+FROM student_attendance SA
+WHERE SA.student_code = '20172020071'
+  AND id_play = 'RADJ';
+-- Obtener num de horas de un estudiante
+SELECT to_char(to_date(to_char(F.end_time, 'HH24'), 'HH24'), 'HH24'), 
+      to_char(to_date(to_char(F.start_time, 'HH24'), 'HH24'), 'HH24')
+FROM function F;
+
+
+
+select distinct SYSDATE,        
+       pl.title,
+       s.student_names, 
+       s.student_surnames,
+       s.email_address2,
+       s.student_code,
+       u.uni_name,
+       SUM(to_char(f.END_TIME,'HH24') - to_char(f.START_TIME,'HH24')),
+       COUNT(sa.student_code),
+       T.term_desc             
+from Play pl,
+     Student s,
+     Character c,
+     character_student cs,
+     unit u,
+     function f,
+     Student_Attendance sa,
+     expend_play EP,
+     term T
+where pl.id_play = c.id_play
+       and c.id_character = cs.id_character
+       and c.id_play = cs.id_play
+       and cs.student_code = s.student_code       
+       and s.unit_code = u.unit_code
+       and pl.title = 'Romeo y Julieta'
+       and f.id_play=sa.id_play
+       and f.id_function=sa.id_function
+       and sa.student_code=s.student_code
+       AND EP.id_term = T.id_term
+       AND EP.id_play = pl.id_play
+group by pl.title,
+       s.student_names, 
+       s.student_surnames,
+       s.email_address2,
+       s.student_code,
+       u.uni_name,
+       T.term_desc;

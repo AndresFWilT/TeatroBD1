@@ -244,7 +244,7 @@ def loginTeacher():
                                     AND STS.employee_code = E.employee_code
                                     AND STS.unit_code = E.unit_code
                                     AND P.state = 1
-                                    AND E.employee_code = 'SNOD'"""
+                                    AND E.employee_code = '{employee[0][4]}'"""
                 cur.execute(sqlGetPlay)
                 play = cur.fetchall()
                 # closing cursor
@@ -305,7 +305,7 @@ def assign_date(occupedDate):
 
 # Check availability of attendance button
 def verify_button_attendance(date):
-    #date = '25/03/2022 09:00'
+    date = '29/03/2022 09:00'
     sqlGetFunction = f"""SELECT id_play, id_function
                          FROM function
                          WHERE function_date = to_date('{date[:10]}', 'DD/MM/YYYY')

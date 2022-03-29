@@ -40,8 +40,8 @@ def check_attendance(codigo):
     sqlGetAttendance = f"""SELECT ea.id_student_attendance
                            FROM student_attendance ea, student s
                            WHERE s.student_code = '{_codigo}'
-                           AND ea.student_code = '{_codigo}'
-    """
+                            AND ea.student_code = '{_codigo}'
+                            AND ea.id_function = '{session["id_function"]}'"""
     cdtls = get_credentials_db()
     try:
         connection = cx_Oracle.connect(
@@ -122,6 +122,7 @@ def student_attendance():
     _student_code = request.form['codeStudent']
     _id_play = session['id_play']
     _id_function = session['id_function']
+    print(_id_function)
 
     # Insert student attendance
     sqlInsAttendance = f"""INSERT INTO student_attendance (student_code, id_play, id_function) 
