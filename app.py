@@ -7,7 +7,7 @@ from flask_bootstrap import Bootstrap
 import cx_Oracle
 import json
 app = Flask(__name__)
-import travel_expenses, attendance
+import travel_expenses, attendance, createPDF
 
 # Global
 mail = Mail()
