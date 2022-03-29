@@ -1,34 +1,59 @@
 {% extends "baseLogin.html" %}
 {% block title %}
-  {{ super() }}
-  Attendance
+{{ super() }}
+Attendance
 {% endblock title %}
 {% block content %}
-  {{ super() }}
-  <h1 class="text-center text-uppercase">Estudiantes inscritos</h1>
-  <table class="table table-bordered text-center">
-    <thead class="thead-dark">
-      <tr>
-        <th>Codigo estudiante</th>
-        <th>Identificacion</th>
-        <th>Nombre</th>
-        <th>Correo</th>
-        <th>Carrera</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% if all_students %}
-        {% for student in all_students %}
-          <tr>
-            {% for data in student %}
-              <td>{{ data }}</td>
-            {% endfor %}
-          </tr
-        {% endfor %}
-        >
-      {% else %}
-        <h3>No se encontraron estudiantes</h3>
-      {% endif %}
-    </tbody>
-  </table>
+{{ super() }}
+<h1 class="text-center text-uppercase">Estudiantes inscritos</h1>
+
+<table class="table table-bordered text-center">
+  <thead class="thead-dark">
+    <tr>
+      <th>Codigo estudiante</th>
+      <th>Nombre</th>
+      <th>Correo</th>
+      <th>Carrera</th>
+      <th>Asistencia</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if students %}
+    {% for n in range(students| length) %}
+    <tr>
+      {% for j in range(0, 4) %}
+        <td>{{ students[n][j] }}</td>
+          {% if j == 3 %}
+          <form action="/markIndAtt" method="POST">
+            <td>
+              {% if check_attendance(students[n][0]) %}
+                <button class="btn btn-outline-primary text-center text-uppercase" disabled="true"><i
+                  class="bi bi-clipboard-check-fill"></i></button>
+              {% else %}
+                <input style="text-align: center" id="codeStudent" type="hidden" name="codeStudent"
+                value="{{ students[n][0] }}" required />
+              <button class="btn btn-outline-success text-center text-uppercase" type="submit"><i
+                  class="bi bi-clipboard-check-fill"></i></button>
+              {% endif %}
+            </td>
+          </form>
+        {% endif %}
+      {% endfor %}
+    </tr {% endfor %}>
+    
+    {% else %}
+    <h3>No se encontraron estudiantes</h3>
+    {% endif %}
+  </tbody>
+</table>
+{% if students %}
+<form action="/markAttendance" class="text-center" method="POST">
+  <input style="text-align: center" id="idPlay" type="hidden" name="idPlay"
+                value="{{ session["id_play"] }}" required />
+  <input style="text-align: center" id="idFunction" type="hidden" name="idFunction"
+                value="{{ session["id_function"] }}" required />
+  <button class="btn btn-outline-warning text-center text-uppercase" type="submit"><i
+    class="bi bi-clipboard-check-fill"> llenar lista de asistencia</i></button>
+</form>
+{% endif %}
 {% endblock content %}
