@@ -4,3 +4,4 @@ env/
 credentials.json
 .vscode/
 flask_session/
+expenses/
