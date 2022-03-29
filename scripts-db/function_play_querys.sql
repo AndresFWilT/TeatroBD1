@@ -24,11 +24,16 @@ WHERE function_date = to_date('25/03/2022', 'DD/MM/YYYY')
 INSERT INTO student_attendance (student_code, id_play, id_function)
 VALUES ('', '', ''); 
 
--- Obtener la fecha de la ultima funcion
+-- Obtener la fecha de la ultima funcion, consultando dias despues de dicha funcion
 SELECT id_function
 FROM function
 WHERE function_date = (SELECT max(function_date)
                        FROM function
                        WHERE id_play = 'RADJ')
   AND id_play = 'RADJ'
-  AND function_date < to_date('25/03/2022', 'DD/MM/YYYY');
+  AND function_date < to_date('07/05/2022', 'DD/MM/YYYY');
+
+-- Verificar si hay obras activas
+SELECT id_play
+FROM play
+WHERE state = 1;

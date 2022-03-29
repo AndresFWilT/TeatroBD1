@@ -243,19 +243,20 @@ def loginTeacher():
                 if str(password) == str(_password):
                     button_attendance = verify_button_attendance(employee[0][3])
                     button_tra_exp = verify_button_tra_exp(employee[0][3])
+                    button_certificates = verify_play_state()
                     session["email"] = _email
                     employee = {
                       "employee_data": employee[0],
                       "attendance": button_attendance,
-                      "exp_tra": button_tra_exp
+                      "exp_tra": button_tra_exp,
+                      "certi": button_certificates
                     }
-                    print(button_tra_exp)
                     # succesfull message
                     return render_template('homeTeacher.html', employee=employee)
                 else:
                     message = "Datos no coinciden"
             except cx_Oracle.Error as error:
-                print('Error occurred:')
+                print('Error occurred: in verify teacher')
                 print(error)
                 #   error message for view
                 message = "No pudimos hacer su solicitud"
@@ -289,7 +290,6 @@ def assign_date(occupedDate):
 # Check availability of attendance button
 def verify_button_attendance(date):
     #date = '25/03/2022 09:00'
-    print(date)
     sqlGetFunction = f"""SELECT id_play, id_function
                          FROM function
                          WHERE function_date = to_date('{date[:10]}', 'DD/MM/YYYY')
@@ -303,7 +303,6 @@ def verify_button_attendance(date):
         cur = connection.cursor()
         cur.execute(sqlGetFunction)
         function = cur.fetchall()
-        print(function)
         cur.close()
         connection.close()
         if len(function) > 0:
@@ -311,7 +310,7 @@ def verify_button_attendance(date):
             session["id_function"] = function[0][1]
             return True
     except cx_Oracle.Error as error:
-        print('Error occurred:')
+        print('Error occurred: in verify button attendance')
         print(error)
     return False
 
@@ -323,9 +322,9 @@ def verify_button_tra_exp(date):
                          FROM function
                          WHERE function_date = (SELECT max(function_date)
                                                 FROM function
-                                                WHERE id_play = 'RADJ')
+                                                WHERE id_play = '{_id_play}')
                            AND id_play = '{_id_play}'
-                           AND to_date('{date}', 'DD/MM/YYYY')"""
+                           AND function_date < to_date('{date[:10]}', 'DD/MM/YYYY')"""
     cdtls = get_credentials_db()
     try:
         connection = cx_Oracle.connect(
@@ -334,13 +333,35 @@ def verify_button_tra_exp(date):
         cur = connection.cursor()
         cur.execute(sqlGetFunction)
         function = cur.fetchall()
-        print(function)
         cur.close()
         connection.close()
         if len(function) > 0:
             return True
     except cx_Oracle.Error as error:
-        print('Error occurred:')
+        print('Error occurred: in verify tra exp button')
+        print(error)
+    return False
+
+
+def verify_play_state():
+    sqlGetPlay = f"""SELECT id_play
+                     FROM play
+                     WHERE state = 1"""
+    cdtls = get_credentials_db()
+    try:
+        connection = cx_Oracle.connect(
+            f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}'
+        )
+        cur = connection.cursor()
+        cur.execute(sqlGetPlay)
+        play = cur.fetchall()
+        print(play)
+        cur.close()
+        connection.close()
+        if len(play) > 0:
+            return True
+    except cx_Oracle.Error as error:
+        print('Error occurred: in verify play state' )
         print(error)
     return False
 
