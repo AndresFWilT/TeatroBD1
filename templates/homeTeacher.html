@@ -13,7 +13,7 @@
     </ul>
   </div>
   <div class="mb-3">
-    <h1 class="text-center">{{ employee["title"] }}</h1>
+    <h1 class="text-center font-italic font-weight-bold">{{ session["title"] }}</h1>
   </div>
   <div class="col-auto p-5 text-center">
     <div class="row text-center">
@@ -46,7 +46,7 @@
       <div class="col-sm-6">
         <div class="card">
           <div class="card-body">
-            <form action="/viewReciebedMail" method="post">
+            <form action="/tExpenses" method="get">
               <h5 class="card-title text-center">Viaticos</h5>
               <p class="card-text">
                 Visualiza a tus estudiantes y genera una liquidacion de viaticos
@@ -72,7 +72,7 @@
       <div class="col-sm-6">
         <div class="card">
           <div class="card-body">
-            <form action="/viewReciebedMail" method="post">
+            <form action="/certificates" method="post">
               <h5 class="card-title text-center">Certificados</h5>
               <p class="card-text">
                 Certifica a los estudiantes de tus obras
@@ -80,12 +80,12 @@
               {% if employee['certi'] %}
                 <div class="btn-group" role="group" aria-label="Basic example">
                   <button class="btn btn-outline-warning text-center text-uppercase"
-                          type="submit" disabled>ir a certificados</button>
+                          type="submit" >ir a certificados</button>
                 </div>
               {% else %}
                 <div class="btn-group" role="group" aria-label="Basic example">
                   <button class="btn btn-outline-warning text-center text-uppercase"
-                          type="submit">ir a certificados</button>
+                          type="submit" disabled>ir a certificados</button>
                 </div>
               {% endif %}
               
