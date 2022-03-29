@@ -5,6 +5,9 @@ Certificate
 {% endblock title %}
 {% block content %}
     {{ super() }}
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
     {% if plays %}
         <h1 class="text-center text-uppercase">Escoge alguna de las obras en la que participas</h1>
         <table class="table table-bordered text-center">
@@ -15,7 +18,7 @@ Certificate
             </tr>
         </thead>
         <tbody>    
-            {% for n in range(plays| length) %}
+            {% for n in range(0,plays| length) %}
                 <tr>
                     {% for j in range(0, 1) %}
                         <td>{{ plays[n][j] }}</td>
@@ -51,17 +54,16 @@ Certificate
         </form>
     </div>
     {% if students %}
-        <p>{{ students[0][0] }}</p>
-        <form action="/generateIndCerti">
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Selecciona una obra
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    {% for i in range(students| length) %}
-                    <input type="hidden" class="form-control-plaintext" id="title" name="title" value="{{ students[i] }}">
-                        <a class="dropdown-item" href="">Generar certificado de la obra: {{ students[i][0] }}</a>
+        <form action="/generateIndCerti" method="POST">
+            <div class="input-group">
+                <select class="browser-default custom-select text-center" name="play_name">
+                    <option value="" disabled selected>Escoge una obra</option>
+                    {% for i in range(0,students| length) %}      
+                        <option value="{{students[i][0]}}">Generar certificado de la obra: <b>{{students[i][0]}}</b></option>
                     {% endfor %}
+                </select>
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-info">Certificar</button>
                 </div>
             </div>
         </form>
