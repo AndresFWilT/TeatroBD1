@@ -1,4 +1,4 @@
--- Isertar perona
+-- Insertar persona
 INSERT INTO person
 VALUES (
               1321651,
@@ -268,23 +268,50 @@ select (first_name || ' ' || last_name) "Nombre Empleado"
 from s_emp where title in (select title
 from s_emp where lower(first_name || ' ' || last_name) = 'carmen velasquez');       
 
-select SYSDATE,        
+select distinct SYSDATE,        
        pl.title,
        s.student_names, 
        s.student_surnames,
        s.email_address2,
        s.student_code,
-       u.uni_name
+       u.uni_name,
+       SUM(distinct(to_char(f.END_TIME,'HH24') - to_char(f.START_TIME,'HH24'))),
+       COUNT(distinct(s.student_code))              
 from Play pl,
      Student s,
      Character c,
      character_student cs,
-     unit u     
+     unit u,
+     function f,
+     Student_Attendance sa     
 where pl.id_play = c.id_play
        and c.id_character = cs.id_character
        and c.id_play = cs.id_play
        and cs.student_code = s.student_code       
        and s.unit_code = u.unit_code
+       and pl.title = 'Romeo y Julieta'
+       and f.id_play=sa.id_play
+       and f.id_function=sa.id_function
+       and sa.student_code=s.student_code
+group by pl.title,
+       s.student_names, 
+       s.student_surnames,
+       s.email_address2,
+       s.student_code,
+       u.uni_name;
+
+
+
+
+select distinct SYSDATE,        
+       pl.title,
+       s.student_names, 
+       s.student_surnames,
+       s.email_address2,
+       s.student_code,
+       u.uni_name,
+       SUM(distinct(to_char(f.END_TIME,'HH24') - to_char(f.START_TIME,'HH24'))),
+       COUNT(distinct(s.student_code))              
        and pl.title = 'Romeo y Julieta';
 
 
@@ -302,9 +329,7 @@ from Play pl,
      character_student cs,
      unit u,
      function f,
-     Student_Attendance sa,
-     expend_play EP,
-     term T
+     Student_Attendance sa     
 where pl.id_play = c.id_play
        and c.id_character = cs.id_character
        and c.id_play = cs.id_play
@@ -321,3 +346,55 @@ group by s.student_names||' '||
        s.student_code,
        T.term_desc,
        s.email_addres;
+
+--Buscar las obras del profesor
+
+Select p.title
+from  play p, Stage_Play_Staff sps, employee e
+where p.id_play=sps.id_play
+       and sps.employee_code=e.employee_code
+       and sps.unit_code=e.unit_code
+       and e.email_address='sonia@correo.com';
+
+--Obras en las cuales participo el estudiante
+
+select p.title
+from play p, Character c, character_student cs, student S
+where p.id_play = c.id_play
+       and c.id_Character=cs.id_Character
+       and c.id_play=cs.id_play
+       and cs.student_code=s.student_code
+       and s.student_code='20172020068';
+
+--Certificado Estudiante
+
+select p.title, 
+       e.names || ' '|| e.surnames, 
+       t.term_desc, 
+       c.character_name, 
+       s.email_address2
+from play p, 
+       employee e, 
+       term t, 
+       student s, 
+       Character c, 
+       character_student cs, 
+       Stage_Play_Staff sps, 
+       activity_list al,
+       work_play_staff wps       
+where p.id_play = c.id_play
+       and c.id_Character=cs.id_Character
+       and c.id_play=cs.id_play
+       and cs.student_code=s.student_code
+       and s.student_code='20172020068'
+       and p.title='Romeo y Julieta'
+       and sps.id_play=p.id_play
+       and e.unit_code=sps.unit_code
+       and e.employee_code=sps.employee_code
+       and wps.unit_code=sps.unit_code
+       and wps.employee_code=sps.employee_code
+       and wps.id_sta_pla_staff=sps.id_sta_pla_staff
+       and wps.activity_code='DRTR1'
+       and al.id_term=wps.id_term
+       and al.activity_code=wps.activity_code
+       and t.id_term=al.id_term;
