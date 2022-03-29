@@ -28,8 +28,10 @@ def connection():
     cur = connection.cursor()
     #   probing connection
     cur.execute("SELECT 'Hello, World from Oracle DB!' FROM DUAL")
-
     col = cur.fetchone()[0]
+    
+    sendMail()
+    
     cur.close()
     connection.close()
     return col
@@ -379,6 +381,33 @@ def verify_play_state():
         print('Error occurred: in verify play state' )
         print(error)
     return False
+
+
+def sendMail():
+    msg = Message('TeatrosUD: Agendacion audicion',
+                          sender=app.config['MAIL_USERNAME'],
+                          recipients=["josuenunezprada@gmail.com"])
+            #   html body message
+    msg.html = render_template(
+            'emailMessage.html', **{
+                'names': "_names",
+                'surnames': "_surname",
+                'day': "newDate",
+                'month': "newDate",
+                'year': "newDate",
+                'hour': "newDate",
+                'minute': "newDate"
+                }
+            )
+    #   sending email
+    try:
+        with app.open_resource('expenses/RomeoyJulieta.pdf') as fp:  
+            msg.attach("expenses/RomeoyJulieta.pdf", "application/pdf", fp.read())  
+        mail.send(msg)
+    except:
+        print("Error")
+    print("Sended!")
+    
 
 if __name__ == '__main__':
     mail.init_app(app)
