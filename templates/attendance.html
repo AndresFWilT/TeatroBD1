@@ -6,22 +6,31 @@
 {% block content %}
   {{ super() }}
   <h1 class="text-center text-uppercase">Estudiantes inscritos</h1>
+  
   <table class="table table-bordered text-center">
     <thead class="thead-dark">
       <tr>
         <th>Codigo estudiante</th>
-        <th>Identificacion</th>
         <th>Nombre</th>
         <th>Correo</th>
         <th>Carrera</th>
+        <th>Asistencia</th>
       </tr>
     </thead>
     <tbody>
-      {% if all_students %}
-        {% for student in all_students %}
+      {% if students %}
+        {% for n in range(1,5) %}
           <tr>
-            {% for data in student %}
-              <td>{{ data }}</td>
+            {% for student in students %}
+              <td>{{ student[n] }}</td>
+              {% if n==5 %}
+              <form action="">
+                <td><i class="bi bi-clipboard-check-fill">
+                  <button class="btn btn-outline-success text-center text-uppercase"
+                  type="submit"></button>
+                </i> </td>
+              </form>
+              {% endif %}
             {% endfor %}
           </tr
         {% endfor %}
