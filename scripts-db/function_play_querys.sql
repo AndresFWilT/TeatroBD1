@@ -34,9 +34,13 @@ WHERE function_date = (SELECT max(function_date)
   AND function_date < to_date('07/05/2022', 'DD/MM/YYYY');
 
 -- Verificar si hay obras activas
-SELECT id_play
-FROM play
-WHERE state = 1;
+SELECT DISTINCT P.id_play
+FROM play P, function F
+WHERE state = 1
+  AND F.id_play = P.id_play
+  AND to_date('05/05/2022', 'DD/MM/YYYY') > (SELECT max(function_date)
+                                             FROM function
+                                             WHERE id_play = 'RADJ');
 
 -- Obtener la obra activa de un docente
 SELECT P.title
@@ -132,3 +136,10 @@ WHERE function_date = (SELECT min(function_date)
                        FROM function
                        WHERE id_play = 'RADJ')
   AND id_play = 'RADJ';
+
+Select p.title
+from  play p, Stage_Play_Staff sps, employee e
+where p.id_play=sps.id_play
+       and sps.employee_code=e.employee_code
+       and sps.unit_code=e.unit_code
+       and e.email_address='sonia@correo.com';

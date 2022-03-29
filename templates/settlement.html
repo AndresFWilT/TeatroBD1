@@ -1,12 +1,12 @@
 {% extends "baseLogin.html" %}
 {% block title %}
 {{ super() }}
-Attendance
+Settlement
 {% endblock title %}
 {% block content %}
 {{ super() }}
-<h1 class="text-center text-uppercase">Estudiantes inscritos</h1>
-
+<h1 class="text-center text-uppercase">Estudiantes que asistieron a la obra</h1>
+<h2 class="text-center font-italic font-weight-bold">{{ session["title"] }}</h2>
 <table class="table table-bordered text-center">
   <thead class="thead-dark">
     <tr>
@@ -32,7 +32,7 @@ Attendance
 {% if students %}
 <form action="/TEGeneratePDF" class="text-center" method="POST">
   <button class="btn btn-outline-success text-center text-uppercase" type="submit"><i
-    class="bi bi-cash">Generar PDF liquidaci&oacute;n</i></button>
+    class="bi bi-cash"> Generar PDF liquidaci&oacute;n</i></button>
 </form>
 {% endif %}
 {% endblock content %}

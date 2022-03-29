@@ -1,0 +1,69 @@
+{% extends "baseLogin.html" %}
+{% block title %}
+{{ super() }}
+Certificate
+{% endblock title %}
+{% block content %}
+    {{ super() }}
+    {% if plays %}
+        <h1 class="text-center text-uppercase">Escoge alguna de las obras en la que participas</h1>
+        <table class="table table-bordered text-center">
+        <thead class="thead-dark">
+            <tr>
+                <th>Nombre de la obra</th>
+                <th>certificar obra</th>
+            </tr>
+        </thead>
+        <tbody>    
+            {% for n in range(plays| length) %}
+                <tr>
+                    {% for j in range(0, 1) %}
+                        <td>{{ plays[n][j] }}</td>
+                        {% if j==0 %}
+                            <form action="/certificatePlay" method="POST">
+                                <td>
+                                <input style="text-align: center" id="play" type="hidden" name="play"
+                                    value="{{ plays[n][0] }}" required />
+                                <button class="btn btn-outline-success text-center text-uppercase" type="submit"><i
+                                    class="bi bi-bookmark-check"></i></button>
+                                </td>
+                            </form>
+                        {% endif %}
+                    {% endfor %}
+            </tr {% endfor %}>
+        </tbody>
+    </table>
+    {% else %}
+        <h1 class="text-center text-uppercase">No se encontraron obras del docente</h1>
+    {% endif %}
+    </br></br>
+    <h2 class="text-center text-uppercase">Busca el codigo de un estudiante</h2>
+    <div clas="form-group">
+        <form action="/searchStudent" class="text-center" method="POST">
+            <div class="input-group">
+                <input type="text" class="form-control text-center" placeholder="escribe el codigo" id="code" name="code" required>
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search">
+                       Buscar
+                  </i></button>
+                </div>
+              </div>
+        </form>
+    </div>
+    {% if students %}
+        <p>{{ students[0][0] }}</p>
+        <form action="/generateIndCerti">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Selecciona una obra
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    {% for i in range(students| length) %}
+                    <input type="hidden" class="form-control-plaintext" id="title" name="title" value="{{ students[i] }}">
+                        <a class="dropdown-item" href="">Generar certificado de la obra: {{ students[i][0] }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </form>
+    {% endif %}
+{% endblock content %}

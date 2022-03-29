@@ -342,6 +342,14 @@ INSERT INTO employee
 VALUES ('FCATS', 'FNBJ', 'Fran', 'Bejarano', '79451245', '3225797982', 'fran@email.com');
 
 
+/* HACER INSERT DE STAGE_PLAY_STAFF*/
+
+/* WORK_PLAY_STAFF*/
+
+/* EXPENSE_LIST */
+
+/* SE LLENA STUDENT_ATTENDANCE */
+
 /* 
 -----------------------------
 fecha finalizada
