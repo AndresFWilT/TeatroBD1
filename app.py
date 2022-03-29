@@ -242,8 +242,12 @@ def loginTeacher():
                 connection.close()
                 if str(password) == str(_password):
                     print("accediendo")
-
+                    button_attendance = verify_button_attendance(employee[0][3])
                     session["email"] = _email
+                    employee = {
+                      "employee_data": employee[0],
+                      "attendance": button_attendance
+                    }
                     # succesfull message
                     return render_template('homeTeacher.html',
                                            employee=employee)
@@ -296,6 +300,7 @@ def verify_button_attendance(date):
         cur = connection.cursor()
         cur.execute(sqlGetFunction)
         function = cur.fetchall()
+        print(function)
         cur.close()
         connection.close()
         if len(function) > 0:
