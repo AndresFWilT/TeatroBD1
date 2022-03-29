@@ -272,4 +272,4 @@ where pl.id_play = c.id_play
 
 select (first_name || ' ' || last_name) "Nombre Empleado"
 from s_emp where title in (select title
-from s_emp where lower(first_name || ' ' || last_name) = 'carmen velasquez');
+from s_emp where lower(first_name || ' ' || last_name) = 'carmen velasquez');       
