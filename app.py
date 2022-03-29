@@ -7,7 +7,7 @@ from flask_bootstrap import Bootstrap
 import cx_Oracle
 import json
 app = Flask(__name__)
-import travel_expenses_routes
+import travel_expenses, attendance
 
 # Global
 mail = Mail()
@@ -198,18 +198,6 @@ def view_audition():
     return render_template('viewAudition.html', all_auditions=all_auditions)
 
 
-##  Asign date
-def assign_date(occupedDate):
-    if occupedDate.hour >= 18:
-        occupedDate = occupedDate.replace(hour=6)
-        if occupedDate.weekday() >= 5:
-            occupedDate = occupedDate.replace(day=occupedDate.day + 2)
-        else:
-            occupedDate = occupedDate.replace(day=occupedDate.day + 1)
-    newDate = occupedDate.replace(hour=occupedDate.hour + 2, minute=0)
-    return newDate
-
-
 ##  path to view login
 @app.route('/loginTeacher')
 def view_loginTeacher():
@@ -228,12 +216,12 @@ def loginTeacher():
             sqlGetPass = f"""SELECT em.identification_number 
                              FROM EMPLOYEE em WHERE em.email_address like '%{_email}%'"""
             # Query for bring the data of the user
-            sqlGetEmployee = f"""SELECT em.names, em.surnames, em.email_address, to_char(SYSDATE,'MONTH, YYYY') 
+            sqlGetEmployee = f"""SELECT em.names, em.surnames, em.email_address, 
+                                        to_char(SYSDATE,'DD/MM/YYYY hh24:mi') 
                                  FROM EMPLOYEE em, DUAL WHERE em.email_address like '%{_email}%'"""
             # Bring the credentials from JSON to use in DB
             cdtls = get_credentials_db()
             try:
-                print("Entra a la conexion")
                 # Connection
                 connection = cx_Oracle.connect(
                     f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}'
@@ -254,14 +242,16 @@ def loginTeacher():
                 # closing connection
                 connection.close()
                 if str(password) == str(_password):
-                    print("accediendo")
-
+                    button_attendance = verify_button_attendance(employee[0][3])
+                    print(button_attendance)
                     session["email"] = _email
+                    employee = {
+                      "employee_data": employee[0],
+                      "attendance": button_attendance
+                    }
                     # succesfull message
-                    return render_template('homeTeacher.html',
-                                           employee=employee)
+                    return render_template('homeTeacher.html', employee=employee)
                 else:
-                    # succesfull message
                     message = "Datos no coinciden"
             except cx_Oracle.Error as error:
                 print('Error occurred:')
@@ -282,6 +272,44 @@ def get_credentials_db():
     f.close
     return db
 
+
+##  Asign date
+def assign_date(occupedDate):
+    if occupedDate.hour >= 18:
+        occupedDate = occupedDate.replace(hour=6)
+        if occupedDate.weekday() >= 5:
+            occupedDate = occupedDate.replace(day=occupedDate.day + 2)
+        else:
+            occupedDate = occupedDate.replace(day=occupedDate.day + 1)
+    newDate = occupedDate.replace(hour=occupedDate.hour + 2, minute=0)
+    return newDate
+
+
+def verify_button_attendance(date):
+    #date = '25/03/2022 09:00'
+    sqlGetFunction = f"""SELECT id_play, id_function
+                        FROM function
+                        WHERE function_date = to_date('{date[:10]}', 'DD/MM/YYYY')
+                        AND start_time <= (to_date('{date}', 'DD/MM/YYYY HH24:MI'))
+                        AND end_time >= (to_date('{date}', 'DD/MM/YYYY HH24:MI'))"""
+    cdtls = get_credentials_db()
+    try:
+        connection = cx_Oracle.connect(
+            f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}'
+        )
+        cur = connection.cursor()
+        cur.execute(sqlGetFunction)
+        function = cur.fetchall()
+        cur.close()
+        connection.close()
+        if len(function) > 0:
+            session["id_play"] = function[0][0]
+            session["id_function"] = function[0][1]
+            return True
+    except cx_Oracle.Error as error:
+        print('Error occurred:')
+        print(error)
+    return False
 
 if __name__ == '__main__':
     mail.init_app(app)

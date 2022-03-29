@@ -1,6 +1,6 @@
 from __main__ import app, session, redirect
 
-@app.route('/test', methods=['GET'])
+@app.route('/texpenses', methods=['GET'])
 def test():
     # check if the user is logged or not
     if not session.get("email"):

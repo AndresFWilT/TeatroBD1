@@ -1,0 +1,19 @@
+/*UNIT_CODE, EMPLOYEE_CODE, ID_STA_PLA_STAFF, ID_ROLE, ID_PLAY, STAFF_START_DATE, STAFF_END_DATE*/
+INSERT INTO STAGE_PLAY_STAFF (UNIT_CODE, EMPLOYEE_CODE, ID_ROLE, ID_PLAY, STAFF_START_DATE, STAFF_END_DATE) 
+VALUES ('IGNST','SNOD',1,'RADJ',to_date('25/03/2022','DD/MM/YYYY'),to_date('06/05/2022 20:00', 'DD/MM/YYYY hh24:mi'));                                                                                      
+
+INSERT INTO STAGE_PLAY_STAFF (UNIT_CODE, EMPLOYEE_CODE, ID_ROLE, ID_PLAY, STAFF_START_DATE, STAFF_END_DATE) 
+VALUES ('IGNST','SNOD',1,'RADJ',to_date('25/03/2022','DD/MM/YYYY'),to_date('06/05/2022 20:00', 'DD/MM/YYYY hh24:mi'));                                                                                      
+
+
+ATPYV
+
+/* UNIT_CODE, EMPLOYEE_CODE, NAMES, SURNAMES, IDENTIFICATION_NUMBER, PHONE_NUMBER
+EMAIL_ADDRESS */
+
+INSERT INTO employee 
+VALUES ('IGNST', 'SNOD', 'Sonia', 'Ordoñez', '51915567', '3052185424', 'sonia@correo.com');
+ 
+ /* ID_PLAY, ID_TYPE_PLAY, COUNTRY_CODE, ID_PLAYWRIGHT, DATE_PLAY, TITLE, STATE */
+INSERT INTO play 
+VALUES ('CDBA', 1, '34', 'FDL', TO_DATE('1945','YYYY'), 'La casa de Bernarda Alba', 0);
