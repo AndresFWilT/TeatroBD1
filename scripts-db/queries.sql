@@ -273,3 +273,22 @@ where pl.id_play = c.id_play
 select (first_name || ' ' || last_name) "Nombre Empleado"
 from s_emp where title in (select title
 from s_emp where lower(first_name || ' ' || last_name) = 'carmen velasquez');       
+
+select SYSDATE,        
+       pl.title,
+       s.student_names, 
+       s.student_surnames,
+       s.email_address2,
+       s.student_code,
+       u.uni_name
+from Play pl,
+     Student s,
+     Character c,
+     character_student cs,
+     unit u     
+where pl.id_play = c.id_play
+       and c.id_character = cs.id_character
+       and c.id_play = cs.id_play
+       and cs.student_code = s.student_code       
+       and s.unit_code = u.unit_code
+       and pl.title = 'Romeo y Julieta';
