@@ -642,13 +642,48 @@ def search_student():
         plays = cur.fetchall()
         cur.close()
         connection.close()
-
         print(students)
         
     except cx_Oracle.Error as error:
         print('Error occurred:')
         print(error)
     return render_template('certificate.html', plays = plays,students = students)
+
+# Map to search student plays, w student code
+@app.route('/generateIndCerti', methods=['POST'])
+def certify_selected_student_play():
+    if not session.get("email"):
+        return redirect("/loginTeacher")
+
+    # Play name selected from template
+    _play_name = request.form["play_name"]
+    
+    # Get play's of the teacher
+    sqlGetPlays = f"""Select p.title
+                        from  play p, Stage_Play_Staff sps, employee e
+                        where p.id_play=sps.id_play
+                        and sps.employee_code=e.employee_code
+                        and sps.unit_code=e.unit_code
+                        and e.email_address like '{session["email"]}'"""
+    
+    cdtls = get_credentials_db()
+    try:
+        connection = cx_Oracle.connect(
+            f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}'
+        )
+        cur = connection.cursor()
+        # get the plays of student
+        cur.execute(sqlGetPlays)
+        plays = cur.fetchall()
+        cur.close()
+        connection.close()
+        message = "correo electronico enviado"
+    except cx_Oracle.Error as error:
+        print('Error occurred:')
+        print(error)
+        message = "se envio el correo"
+
+    return render_template('certificate.html', plays = plays,message = message)
 
 if __name__ == '__main__':
     mail.init_app(app)
