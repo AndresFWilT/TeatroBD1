@@ -4,15 +4,18 @@ from flask_mail import Mail, Message
 from flask_session import Session
 from config import DevelopmentConfig
 from flask_bootstrap import Bootstrap
+from jinja2 import Environment, FileSystemLoader
+from weasyprint import HTML, CSS
+import os
 import cx_Oracle
 import json
 app = Flask(__name__)
-import travel_expenses, attendance
+import attendance
 
 # Global
 mail = Mail()
 bootstrap = Bootstrap(app)
-
+students = []
 
 ## path for dataBase test connection
 @app.route('/con')
@@ -252,8 +255,10 @@ def loginTeacher():
                 # closing connection
                 connection.close()
                 if str(password) == str(_password):
+                    
                     button_attendance = verify_button_attendance(employee[0][3])
                     button_tra_exp = verify_button_tra_exp(employee[0][3])
+                    print(button_tra_exp)
                     button_certificates = verify_play_state()
                     session["email"] = _email
                     if len(play)>0:
@@ -267,6 +272,9 @@ def loginTeacher():
                       "certi": button_certificates,
                       "title": play
                     }
+                    print("EMPLEADOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+                    print(employee)
+                    
                     # succesfull message
                     return render_template('homeTeacher.html', employee=employee)
                 else:
@@ -333,6 +341,7 @@ def verify_button_attendance(date):
 
 # Check availability of travel expenses button
 def verify_button_tra_exp(date):
+    date = '07/05/2022 09:00'
     _id_play = session["id_play"]
     sqlGetFunction = f"""SELECT id_function
                          FROM function
@@ -358,7 +367,6 @@ def verify_button_tra_exp(date):
         print(error)
     return False
 
-
 def verify_play_state():
     sqlGetPlay = f"""SELECT id_play
                      FROM play
@@ -380,6 +388,193 @@ def verify_play_state():
         print(error)
     return False
 
+## Map to get the table of travel expenses
+@app.route('/tExpenses', methods=['GET'])
+def table_travel_expenses():
+    # check if the user is logged or not
+    if not session.get("email"):
+        # if not there in the session then redirect to the login page
+        return redirect("/loginTeacher")
+    # Query for table Expenses
+    sqlTableExpenses = f"""select distinct                                    
+                                   s.student_names || ' ' ||
+                                   s.student_surnames,
+                                   s.student_code,
+                                   COUNT(sa.student_code),
+                                   SUM(to_char(f.END_TIME,'HH24') - to_char(f.START_TIME,'HH24'))
+                            from Play pl,
+                                 Student s,
+                                 Character c,
+                                 character_student cs,
+                                 unit u,
+                                 function f,
+                                 Student_Attendance sa,
+                                 expend_play EP,
+                                 term T
+                            where pl.id_play = c.id_play
+                                   and c.id_character = cs.id_character
+                                   and c.id_play = cs.id_play
+                                   and cs.student_code = s.student_code       
+                                   and s.unit_code = u.unit_code
+                                   and pl.id_play = '{session["id_play"]}'
+                                   and f.id_play=sa.id_play
+                                   and f.id_function=sa.id_function
+                                   and sa.student_code=s.student_code
+                                   AND EP.id_term = T.id_term
+                                   AND EP.id_play = pl.id_play
+                            group by s.student_names||' '||
+                                   s.student_surnames,
+                                   s.student_code
+                                   """
+
+    cdtls = get_credentials_db()
+    try:
+        connection = cx_Oracle.connect(
+            f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}'
+        )
+        cur = connection.cursor()
+        cur.execute(sqlTableExpenses)
+        students = cur.fetchall()    
+        cur.close()
+        connection.close()
+        
+    except cx_Oracle.Error as error:
+        print('Error occurred:')
+        print(error)
+    return render_template('settlement.html', students=students)
+
+# Map to make the liquidation and generation PDF for travel expenses
+@app.route('/TEGeneratePDF', methods=['POST'])
+def liquidation_expenses():
+     # check if the user is logged or not
+    if not session.get("email"):
+        # if not there in the session then redirect to the login page
+        return redirect("/loginTeacher")
+    sqlGetPlay = f"""select e.names || ' ' ||
+                            e.surnames,
+                            e.identification_number,
+                            DU.uni_name
+                     from employee e,
+                          Unit u,
+                          unit DU
+                     where e.unit_code = u.unit_code
+                            AND e.email_address = '{session["email"]}'
+                            AND u.dependency_unit = DU.unit_code"""
+    sqlGetDates = f"""SELECT TO_CHAR(SYSDATE, 'DD/MM/YYYY'), TO_CHAR(min(F.function_date), 'DD/MM/YYYY'), 
+                             TO_CHAR(max(function_date), 'DD/MM/YYYY'), P.title
+                      FROM function F, play P
+                      WHERE F.id_play = '{session["id_play"]}'
+                        AND F.id_play = P.id_play
+                      GROUP BY P.title"""
+    sqlGetStudents = f"""select distinct                                    
+                            s.student_names || ' ' ||
+                            s.student_surnames,
+                            s.student_code,
+                            s.email_address2,
+                            COUNT(sa.student_code),
+                            SUM(to_char(f.END_TIME,'HH24') - to_char(f.START_TIME,'HH24')),
+                            T.term_desc
+                         from Play pl,
+                            Student s,
+                            Character c,
+                            character_student cs,
+                            unit u,
+                            function f,
+                            Student_Attendance sa,
+                            expend_play EP,
+                            term T
+                         where pl.id_play = c.id_play
+                            and c.id_character = cs.id_character
+                            and c.id_play = cs.id_play
+                            and cs.student_code = s.student_code       
+                            and s.unit_code = u.unit_code
+                            and pl.id_play = 'RADJ'
+                            and f.id_play=sa.id_play
+                            and f.id_function=sa.id_function
+                            and sa.student_code=s.student_code
+                            AND EP.id_term = T.id_term
+                            AND EP.id_play = pl.id_play
+                         group by s.student_names||' '||
+                            s.student_surnames,
+                            s.student_code,
+                            T.term_desc,
+                            s.email_address2"""
+    cdtls = get_credentials_db()
+    try:
+        connection = cx_Oracle.connect(
+            f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}'
+        )
+        cur = connection.cursor()
+        cur.execute(sqlGetPlay)
+        teacher_data = cur.fetchall()
+        cur.execute(sqlGetDates)
+        dates_title = cur.fetchall()
+        cur.execute(sqlGetStudents)
+        students_info = cur.fetchall()
+        print(students_info)
+        cur.close()
+        connection.close()
+        
+    except cx_Oracle.Error as error:
+        print('Error occurred: in verify play state' )
+        print(error)
+
+
+    # Prueba
+
+    info = {
+        "fecha": dates_title[0][0],
+        "obra": dates_title[0][3],
+        "fechaInicio": dates_title[0][1],
+        "fechaFin": dates_title[0][2],
+        "nombreProfesor": teacher_data[0][0],
+        "cedula": teacher_data[0][1],
+        "facultad": teacher_data[0][2],
+        }
+
+    print(len(students_info))
+    print(len(students_info[0]))
+
+    PDF_creation('C:/proyectos/TeatroUdistrital/Flask/teatroudbd/templates/settlementTravelExpenses.html',
+        info, 'expenses',students_info)
+    return redirect('/tExpenses')
+
+## Function to create a PDF
+def PDF_creation(template, information, dependency,students):
+    # first we take the name of the template
+    template_name = template.split('/')[-1]
+
+    # use the environment loeader FilSystem for the directory templates
+    env = Environment(loader=FileSystemLoader('templates'))
+    play_name = information['obra'].replace(" ", "")
+
+        # generating the paths
+    saving_path = dependency + '/' + play_name
+    print('El camino de guardado es: ' + saving_path)
+
+    # select the name of the html file
+    template = env.get_template(template_name)
+    html = template.render(information=information,students=students)
+
+    # then save into the dependency with the name of the file
+    with open(saving_path + '.html', 'w') as f:
+        f.write(html)
+
+    # Style conf
+    css = CSS(string='''
+        @page {size: A4; margin: 1cm:}
+        th, td {border: 1px solid black;}
+    ''')
+
+    # file convertion from html to PDF
+    HTML(saving_path + '.html').write_pdf(saving_path + '.pdf',
+                                              stylesheets=[css])
+
+    # deleting the HTML
+    if os.path.exists(saving_path + '.html'):
+        os.remove(saving_path + '.html')
+
+
 if __name__ == '__main__':
     mail.init_app(app)
     app.config.from_object(DevelopmentConfig)
@@ -387,5 +582,3 @@ if __name__ == '__main__':
     app.config["SESSION_TYPE"] = "filesystem"
     Session(app)
     app.run(debug=True)
-
-

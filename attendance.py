@@ -1,5 +1,4 @@
 from __main__ import app
-from ctypes import sizeof
 from app import session, redirect, cx_Oracle, render_template, get_credentials_db,request
 
 @app.route('/attendance', methods=['GET'])
@@ -37,6 +36,7 @@ def attendance():
 def check_attendance(codigo):
     _codigo = codigo
     print(_codigo)
+    # Attentdance verify code student
     sqlGetAttendance = f"""SELECT ea.id_student_attendance
                            FROM student_attendance ea, student s
                            WHERE s.student_code = '{_codigo}'
@@ -52,6 +52,7 @@ def check_attendance(codigo):
         std_attendance = cur.fetchall()
         cur.close()
         connection.close()
+        # returning true or false
         if len(std_attendance)>0:
             return True
         else:
@@ -60,7 +61,7 @@ def check_attendance(codigo):
         print('Error occurred:')
         print(error)
     return False
-
+# mark all attendance
 @app.route('/markAttendance', methods=['POST'])
 def mark_attendance():
     _id_play = request.form['idPlay']
@@ -84,6 +85,7 @@ def mark_attendance():
         codes = cur.fetchall()
         cur.close()
         connection.close()
+        # for to check all attendance (verifying if it's attended or not)
         for i in range (len(codes)):
             if (check_attendance(codes[i][0]) == False):
                 mark_all_attendance(codes[i][0],_id_function,_id_play)
@@ -93,7 +95,8 @@ def mark_attendance():
         print('Error occurred:')
         print(error)
     return redirect("/attendance")
-
+    
+# method to mark one by one attendance 
 def mark_all_attendance(code,id_function,id_play):
     # Insert student attendance
     sqlInsAttendance = f"""INSERT INTO student_attendance (student_code, id_play, id_function) 
@@ -113,7 +116,7 @@ def mark_all_attendance(code,id_function,id_play):
     except cx_Oracle.Error as error:
         print('Error occurred:')
         print(error)
-
+# map to mark individual attendance
 @app.route('/markIndAtt', methods=['POST','GET'])
 def student_attendance():
     if not session.get("email"):
@@ -144,5 +147,5 @@ def student_attendance():
         print('Error occurred:')
         print(error)
     return redirect("/attendance")
-
+# function to use with jinja on template
 app.jinja_env.globals.update(check_attendance=check_attendance)

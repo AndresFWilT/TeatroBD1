@@ -195,6 +195,7 @@ where pl.id_play = c.id_play
  where f.id_play=pl.id_play and pl.id_play=c.id_play  and c.id_character=cs.id_character and c.id_play=cs.id_play 
  and cs.student_code=s.student_code and pl.title='Romeo y Julieta' and f.FUNCTION_DATE=to_char('25/03/2022');*/
 
+-- Obt
 /* select SYSDATE,        
        pl.title,
        s.student_names, 
@@ -211,26 +212,19 @@ where pl.id_play = c.id_play
        and c.id_character = cs.id_character
        and c.id_play = cs.id_play
        and cs.student_code = s.student_code       
-       and s.unit_code = u.unit_code
-union
- select SYSDATE,        
-       pl.title,
-       e.names,
+       and s.unit_code = u.unit_code*/
+
+-- Obtener datos del profesor
+select e.names || ' ' ||
        e.surnames,
-       e.email_address,
        e.identification_number,
-       u.uni_name
-from Stage_Play_Staff sps,
-     Employee e,
+       DU.uni_name
+from employee e,
      Unit u,
-     Role r,
-     play pl
-where pl.id_play=sps.id_play
-       and r.id_role=sps.id_role
-       and e.unit_code=sps.unit_code
-       and e.employee_code=sps.employee_code
-       and u.unit_code=e.unit_code
-       and r.NAME_ROLE like 'Docente';*/
+     unit DU
+where e.unit_code = u.unit_code
+       AND e.email_address = 'sonia@correo.com'
+       AND u.dependency_unit = DU.unit_code;
 
 select distinct SYSDATE,        
        pl.title,
@@ -292,3 +286,38 @@ where pl.id_play = c.id_play
        and cs.student_code = s.student_code       
        and s.unit_code = u.unit_code
        and pl.title = 'Romeo y Julieta';
+
+
+select distinct                                    
+       s.student_names || ' ' ||
+       s.student_surnames,
+       s.student_code,
+       s.email_address2,
+       COUNT(sa.student_code),
+       SUM(to_char(f.END_TIME,'HH24') - to_char(f.START_TIME,'HH24')),
+       T.term_desc
+from Play pl,
+     Student s,
+     Character c,
+     character_student cs,
+     unit u,
+     function f,
+     Student_Attendance sa,
+     expend_play EP,
+     term T
+where pl.id_play = c.id_play
+       and c.id_character = cs.id_character
+       and c.id_play = cs.id_play
+       and cs.student_code = s.student_code       
+       and s.unit_code = u.unit_code
+       and pl.id_play = 'RADJ'
+       and f.id_play=sa.id_play
+       and f.id_function=sa.id_function
+       and sa.student_code=s.student_code
+       AND EP.id_term = T.id_term
+       AND EP.id_play = pl.id_play
+group by s.student_names||' '||
+       s.student_surnames,
+       s.student_code,
+       T.term_desc,
+       s.email_addres;

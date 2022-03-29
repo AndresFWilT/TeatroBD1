@@ -80,13 +80,11 @@ SELECT to_char(to_date(to_char(F.end_time, 'HH24'), 'HH24'), 'HH24'),
       to_char(to_date(to_char(F.start_time, 'HH24'), 'HH24'), 'HH24')
 FROM function F;
 
-
-
-select distinct SYSDATE,        
+-- Estudiantes con asistencias
+select distinct 
        pl.title,
-       s.student_names, 
+       s.student_names || ' ' ||
        s.student_surnames,
-       s.email_address2,
        s.student_code,
        u.uni_name,
        SUM(to_char(f.END_TIME,'HH24') - to_char(f.START_TIME,'HH24')),
@@ -119,3 +117,18 @@ group by pl.title,
        s.student_code,
        u.uni_name,
        T.term_desc;
+
+-- Obtener la fecha de la ultima funcion, consultando dias despues de dicha funcion
+SELECT TO_CHAR(SYSDATE, 'DD/MM/YYYY'), TO_CHAR(min(F.function_date), 'DD/MM/YYYY'), 
+                TO_CHAR(max(function_date), 'DD/MM/YYYY'), P.title
+FROM function F, play P
+WHERE F.id_play = 'RADJ'
+  AND F.id_play = P.id_play
+GROUP BY P.title;
+
+SELECT id_function
+FROM function
+WHERE function_date = (SELECT min(function_date)
+                       FROM function
+                       WHERE id_play = 'RADJ')
+  AND id_play = 'RADJ';
