@@ -258,8 +258,8 @@ def loginTeacher():
                     
                     button_attendance = verify_button_attendance(employee[0][3])
                     button_tra_exp = verify_button_tra_exp(employee[0][3])
-                    print(button_tra_exp)
-                    button_certificates = verify_play_state()
+                    button_certificates = verify_play_state(employee[0][3])
+                    print(button_certificates)
                     session["email"] = _email
                     if len(play)>0:
                         play = play[0][0]
@@ -272,8 +272,6 @@ def loginTeacher():
                       "certi": button_certificates,
                       "title": play
                     }
-                    print("EMPLEADOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
-                    print(employee)
                     
                     # succesfull message
                     return render_template('homeTeacher.html', employee=employee)
@@ -367,10 +365,15 @@ def verify_button_tra_exp(date):
         print(error)
     return False
 
-def verify_play_state():
-    sqlGetPlay = f"""SELECT id_play
-                     FROM play
-                     WHERE state = 1"""
+def verify_play_state(date):
+    date = '07/05/2022'
+    sqlGetPlay = f"""SELECT DISTINCT P.id_play
+                     FROM play P, function F
+                     WHERE state = 1
+                       AND F.id_play = P.id_play
+                       AND to_date('{date}', 'DD/MM/YYYY') > (SELECT max(function_date)
+                                                              FROM function
+                                                              WHERE id_play = '{session["id_play"]}')"""
     cdtls = get_credentials_db()
     try:
         connection = cx_Oracle.connect(
