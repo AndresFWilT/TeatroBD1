@@ -211,7 +211,7 @@ def view_loginTeacher():
 
 
 ## Path to verify the credentials of the teacher
-@app.route("/verifyTeacher", methods=['POST'])
+@app.route("/verifyTeacher", methods=['POST', 'GET'])
 def loginTeacher():
     if request.method == 'POST':
         # From POST method, we request the inputs from the view
@@ -287,6 +287,62 @@ def loginTeacher():
                 message = "No pudimos hacer su solicitud"
         except Exception as e:
             message = e
+        return render_template('loginTeacher.html', message=message)
+    else:
+        if not session.get("email"):
+            return redirect("/loginTeacher")
+        # Bring the credentials from JSON to use in DB
+        cdtls = get_credentials_db()
+        sqlGetEmployee = f"""SELECT em.names, em.surnames, em.email_address, 
+                                        to_char(SYSDATE,'DD/MM/YYYY HH24:MI'), em.employee_code
+                                 FROM EMPLOYEE em, DUAL WHERE em.email_address like '%{session.get("email")}%'"""
+        try:
+            # Connection
+            connection = cx_Oracle.connect(
+                f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}'
+            )
+            cur = connection.cursor()            
+            # executing Query for user
+            cur.execute(sqlGetEmployee)
+            employee = cur.fetchall()
+            # Query for get active play
+            sqlGetPlay = f"""SELECT P.title
+                             FROM play P, stage_play_staff STS, Employee E
+                             WHERE P.id_play = STS.id_play
+                                AND STS.employee_code = E.employee_code
+                                AND STS.unit_code = E.unit_code
+                                AND P.state = 1
+                                AND E.employee_code = '{employee[0][4]}'"""
+            cur.execute(sqlGetPlay)
+            play = cur.fetchall()
+            # closing cursor
+            cur.close()
+            # closing connection
+            connection.close()
+                
+            button_attendance = verify_button_attendance(employee[0][3])
+            button_tra_exp = verify_button_tra_exp(employee[0][3])
+            button_certificates = verify_play_state(employee[0][3])
+            if len(play)>0:
+                play = play[0][0]
+                session["title"] = play
+            else:
+                play = ""
+            employee = {
+              "employee_data": employee[0],
+              "attendance": button_attendance,
+              "exp_tra": button_tra_exp,
+              "certi": button_certificates,
+              "title": play
+            }                
+                # succesfull message
+            return render_template('homeTeacher.html', employee=employee)
+        except cx_Oracle.Error as error:
+            print('Error occurred: in verify teacher')
+            print(error)
+            #   error message for view
+            message = "No pudimos hacer su solicitud"
+        
         return render_template('loginTeacher.html', message=message)
 
 
@@ -450,6 +506,7 @@ def table_travel_expenses():
         print(error)
     return render_template('settlement.html', students=students)
 
+
 # Map to make the liquidation and generation PDF for travel expenses
 @app.route('/TEGeneratePDF', methods=['POST'])
 def liquidation_expenses():
@@ -542,9 +599,10 @@ def liquidation_expenses():
         info, 'expenses',students_info)
     return redirect('/tExpenses')
 
+
 ## Function to create a PDF
 # directory of template, information, dependency, students info
-def PDF_creation(template, information, dependency,students):
+def PDF_creation(template, information, dependency, students):
     # first we take the name of the template
     template_name = template.split('/')[-1]
 
@@ -558,7 +616,7 @@ def PDF_creation(template, information, dependency,students):
 
     # select the name of the html file
     template = env.get_template(template_name)
-    html = template.render(information=information,students=students)
+    html = template.render(information=information, students=students)
 
     # then save into the dependency with the name of the file
     with open(saving_path + '.html', 'w') as f:
@@ -566,17 +624,17 @@ def PDF_creation(template, information, dependency,students):
 
     # Style conf
     css = CSS(string='''
-        @page {size: A4; margin: 1cm:}
-        th, td {border: 1px solid black;}
-    ''')
+                        @page {size: A4; margin: 1cm:}
+                        th, td {border: 1px solid black;}
+                    ''')
 
     # file convertion from html to PDF
-    HTML(saving_path + '.html').write_pdf(saving_path + '.pdf',
-                                              stylesheets=[css])
+    HTML(saving_path + '.html').write_pdf(saving_path + '.pdf', stylesheets=[css])
 
     # deleting the HTML
     if os.path.exists(saving_path + '.html'):
         os.remove(saving_path + '.html')
+
 
 # Map to go to view, certificates
 @app.route('/certificates', methods=['POST'])
@@ -756,6 +814,7 @@ def search_student():
         print(error)
     return render_template('certificate.html', plays = plays,students = students)
 
+
 # Map to search student plays, w student code
 @app.route('/generateIndCerti', methods=['POST'])
 def certify_selected_student_play():
@@ -857,8 +916,9 @@ def certify_selected_student_play():
         message = "Algo paso"
     return render_template('certificate.html', plays = plays,message = message)
 
+
 # sending a mail for certification
-def sendMail(destination,header,information,dependency):
+def sendMail(destination, header, information, dependency):
 
     # use the environment loeader FilSystem for the directory templates
     play_name = information['obra'].replace(" ", "")
@@ -867,8 +927,8 @@ def sendMail(destination,header,information,dependency):
     saving_path = dependency + '/' + play_name
 
     msg = Message(header,
-                          sender=app.config['MAIL_USERNAME'],
-                          recipients=[destination])
+                  sender=app.config['MAIL_USERNAME'],
+                  recipients=[destination])
 
     #   html body message
     msg.html = render_template(

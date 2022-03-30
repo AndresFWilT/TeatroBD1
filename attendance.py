@@ -9,7 +9,7 @@ def attendance():
     # Get play's students
     sqlGetStudents = f"""SELECT S.student_code, student_names||' '||student_surnames,email_address2, U.uni_name
                          FROM student S, character_student CS, character C, play P, unit U
-                         WHERE S.unit_code like U.unit_code
+                         WHERE S.unit_code LIKE U.unit_code
                            AND S.student_code = CS.student_code
                            AND CS.id_character = C.id_character
                            AND C.id_play = P.id_play
