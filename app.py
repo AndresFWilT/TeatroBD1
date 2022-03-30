@@ -147,7 +147,9 @@ def insert_student_audition():
 @app.route('/viewStudent')
 def view_student():
     #   getting all the students with a query
-    sqlGetStudents = """SELECT S.code, CONCAT(CONCAT(P.idtype, ' '), P.idnumber), CONCAT(CONCAT(P.names, ' '), P.surname), P.email , S.career FROM person P, student S WHERE P.idnumber = S.idnumber """
+    sqlGetStudents = """SELECT s.student_code, s.student_names||' '||s.student_surnames, s.email_address2, u.uni_name 
+                        FROM student s, unit u
+                        WHERE s.unit_code = u.unit_code"""
     #   gettin credentials from method
     cdtls = get_credentials_db()
     #   try catch
@@ -161,6 +163,7 @@ def view_student():
         cur.execute(sqlGetStudents)
         #   fetch to show students
         all_students = cur.fetchall()
+        print(all_students)
         #   closing cursor & connection
         cur.close()
         connection.close()
@@ -690,7 +693,7 @@ def certify_All_students_in_play():
                 "cedula": datos[i][7],
                 "facultad": datos[i][6],
             }
-            
+
             students = [()]
 
             PDF_creation('C:/Proyectos/TeatroUdistrital/Flask/teatroudbd/templates/certificationStudent.html',
