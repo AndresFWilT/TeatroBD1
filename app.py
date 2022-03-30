@@ -605,6 +605,108 @@ def certificates():
         print(error)
     return render_template('certificate.html', plays = plays)
 
+# Map to send a certification for every student in selected play
+@app.route('/certificatePlay', methods=['POST'])
+def certify_All_students_in_play():
+    if not session.get("email"):
+        return redirect("/loginTeacher")
+    
+    # ID play bringed FROM template (POST METHOD)
+    _play = request.form["play"]
+
+    # Get play's of the teacher
+    sqlGetPlays = f"""Select p.title
+                        from  play p, Stage_Play_Staff sps, employee e
+                        where p.id_play=sps.id_play
+                        and sps.employee_code=e.employee_code
+                        and sps.unit_code=e.unit_code
+                        and e.email_address like '{session["email"]}'"""
+
+    # Query to get all students that attendance in the play
+    sqlStudentsAtt = f"""select DISTINCT p.title, 
+                        s.student_names|| ' ' || s.student_surnames,
+                        e.names || ' '|| e.surnames, 
+                        t.term_desc, 
+                        c.character_name, 
+                        s.email_address2,
+                        u.uni_name,
+                        e.identification_number,
+                        s.student_code
+                    from play p, 
+                        employee e, 
+                        term t, 
+                        student s, 
+                        Character c, 
+                        character_student cs, 
+                        Stage_Play_Staff sps, 
+                        activity_list al,
+                        work_play_staff wps,  
+                        unit u,    
+                        student_attendance sa
+                    where p.id_play = c.id_play
+                        and c.id_Character=cs.id_Character
+                        and c.id_play=cs.id_play
+                        and cs.student_code=s.student_code
+                        and p.title = '{_play}'
+                        and sps.id_play=p.id_play
+                        and e.unit_code=sps.unit_code
+                        and e.employee_code=sps.employee_code
+                        and wps.unit_code=sps.unit_code
+                        and wps.employee_code=sps.employee_code
+                        and wps.id_sta_pla_staff=sps.id_sta_pla_staff
+                        and wps.activity_code = 'DRTR1'
+                        and al.id_term=wps.id_term
+                        and al.activity_code=wps.activity_code
+                        and t.id_term=al.id_term
+                        and s.unit_code=u.unit_code
+                        and sa.student_code = s.student_code
+    """
+    cdtls = get_credentials_db()
+    try:
+        connection = cx_Oracle.connect(
+            f'{cdtls["user"]}/{cdtls["psswrd"]}@{cdtls["host"]}:{cdtls["port"]}/{cdtls["db"]}'
+        )
+        cur = connection.cursor()
+        # get the plays of student
+        cur.execute(sqlStudentsAtt)
+        datos = cur.fetchall()
+
+        # get the plays of teacher
+        cur.execute(sqlGetPlays)
+        plays = cur.fetchall()
+        
+        # for to send to every student that attendance the play, thy certificate
+        for i in range(0,len(datos)):
+            # email direction
+            _email_destination = datos[i][5]
+            # information of the student
+            information = {
+                "director": datos[i][2],
+                "nombre": datos[i][1],
+                "codigo": datos[i][8],
+                "obra": datos[i][0],
+                "periodo": datos[i][3],
+                "personaje": datos[i][4],
+                "cedula": datos[i][7],
+                "facultad": datos[i][6],
+            }
+            
+            students = [()]
+
+            PDF_creation('C:/Proyectos/TeatroUdistrital/Flask/teatroudbd/templates/certificationStudent.html',
+            information, 'certification',students)
+
+            sendMail(_email_destination,'TeatrosUD: certificacion participacion en obra',information,'certification')
+            
+        cur.close()
+        connection.close()
+        message = "correos electronicos enviados"
+    except cx_Oracle.Error as error:
+        print('Error occurred:')
+        print(error)
+        message = "Algo paso"
+    return render_template('certificate.html', plays = plays,message = message)
+
 # Map to search student plays, w student code
 @app.route('/searchStudent', methods=['POST'])
 def search_student():
@@ -749,8 +851,7 @@ def certify_selected_student_play():
     except cx_Oracle.Error as error:
         print('Error occurred:')
         print(error)
-        message = "se envio el correo"
-
+        message = "Algo paso"
     return render_template('certificate.html', plays = plays,message = message)
 
 # sending a mail for certification
