@@ -535,7 +535,7 @@ def liquidation_expenses():
         }
 
     # calls the function pdf_creation
-    PDF_creation('templates\settlementTravelExpenses.html',
+    PDF_creation('C:/Proyectos/TeatroUdistrital/Flask/teatroudbd/templates/settlementTravelExpenses.html',
         info, 'expenses',students_info)
     return redirect('/tExpenses')
 
@@ -738,8 +738,10 @@ def certify_selected_student_play():
 
         students = [()]
 
-        PDF_creation('templates\certificationStudent.html',
+        PDF_creation('C:/Proyectos/TeatroUdistrital/Flask/teatroudbd/templates/certificationStudent.html',
         information, 'certification',students)
+
+        sendMail(_email_destination,'TeatrosUD: certificacion participacion en obra',information,'certification')
 
         cur.close()
         connection.close()
@@ -751,29 +753,32 @@ def certify_selected_student_play():
 
     return render_template('certificate.html', plays = plays,message = message)
 
+# sending a mail for certification
+def sendMail(destination,header,information,dependency):
 
-def sendMail():
-    msg = Message('TeatrosUD: Agendacion audicion',
+    # use the environment loeader FilSystem for the directory templates
+    play_name = information['obra'].replace(" ", "")
+
+    # generating the paths
+    saving_path = dependency + '/' + play_name
+
+    msg = Message(header,
                           sender=app.config['MAIL_USERNAME'],
-                          recipients=['andresfwilchest@gmail.com'])
-            #   html body message
+                          recipients=[destination])
+
+    #   html body message
     msg.html = render_template(
-            'emailMessage.html', **{
-                'names': "_names",
-                'surnames': "_surname",
-                'day': "newDate",
-                'month': "newDate",
-                'year': "newDate",
-                'hour': "newDate",
-                'minute': "newDate"
+            'emailCertificationMessage.html', **{
+                'director': information['director'],
+                'nombre': information['nombre'],
+                'obra': information['obra'],
                 }
             )
+
     #   sending email
-    with app.open_resource('expenses/RomeoyJulieta.pdf') as fp:  
-        msg.attach("expenses/RomeoyJulieta.pdf", "application/pdf", fp.read())  
+    with app.open_resource(saving_path+".pdf") as fp:  
+        msg.attach(saving_path+".pdf", "application/pdf", fp.read())  
     mail.send(msg)
-    print("Error")
-    print("Sended!")
 
 
 if __name__ == '__main__':
