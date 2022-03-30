@@ -341,12 +341,50 @@ VALUES ('FCATS', 'LCLP', 'Lucia', 'Lopez', '1014894512', '3016597845', 'licu@ema
 INSERT INTO employee 
 VALUES ('FCATS', 'FNBJ', 'Fran', 'Bejarano', '79451245', '3225797982', 'fran@email.com');
 
+/* EXPENSE_LIST */
+--GASTO DE VIATICOS
+INSERT INTO EXPENSE_LIST
+VALUES (2,'GDVTC'); 
+
+--GASTO DE ESENOGRAFÍA
+INSERT INTO EXPENSE_LIST
+VALUES (2,'GDECN'); 
+
+--GASTO DE ILUMINACIÓN
+INSERT INTO EXPENSE_LIST
+VALUES (2,'GDILM'); 
 
 /* HACER INSERT DE STAGE_PLAY_STAFF*/
+/*UNIT_CODE, EMPLOYEE_CODE, ID_ROLE, ID_PLAY, STAFF_START_DATE, STAFF_END_DATE*/
+INSERT INTO STAGE_PLAY_STAFF (UNIT_CODE, EMPLOYEE_CODE, ID_ROLE, ID_PLAY, STAFF_START_DATE, STAFF_END_DATE) 
+VALUES ('IGNST','SNOD',1,'RADJ',to_date('25/03/2022','DD/MM/YYYY'),to_date('06/05/2022 20:00', 'DD/MM/YYYY hh24:mi'));                                                                                      
+
+INSERT INTO STAGE_PLAY_STAFF (UNIT_CODE, EMPLOYEE_CODE, ID_ROLE, ID_PLAY, STAFF_START_DATE, STAFF_END_DATE) 
+VALUES ('IGNST','AJDZ',1,'RADJ',to_date('25/03/2022','DD/MM/YYYY'),to_date('06/05/2022 20:00', 'DD/MM/YYYY hh24:mi'));                                                                                      
+
+INSERT INTO STAGE_PLAY_STAFF (UNIT_CODE, EMPLOYEE_CODE, ID_ROLE, ID_PLAY, STAFF_START_DATE, STAFF_END_DATE) 
+VALUES ('FCATS','RNQT',2,'RADJ',to_date('25/03/2022','DD/MM/YYYY'),to_date('06/05/2022 20:00', 'DD/MM/YYYY hh24:mi'));                                                                                      
+
 
 /* WORK_PLAY_STAFF*/
 
-/* EXPENSE_LIST */
+ /*ID_WORK_PL_STA, UNIT_CODE, EMPLOYEE_CODE, ID_STA_PLA_STAFF, ID_PLAY, ID_FUNCTION, ID_TERM, ACTIVITY_CODE */
+                                                                        
+INSERT INTO WORK_PLAY_STAFF (UNIT_CODE, EMPLOYEE_CODE, ID_STA_PLA_STAFF, ID_PLAY, ID_FUNCTION, ID_TERM, ACTIVITY_CODE) 
+VALUES ('IGNST','SNOD',1,'RADJ',8,2,'DRTR1');                                                                                      
+
+INSERT INTO WORK_PLAY_STAFF (UNIT_CODE, EMPLOYEE_CODE, ID_STA_PLA_STAFF, ID_PLAY, ID_FUNCTION, ID_TERM, ACTIVITY_CODE) 
+VALUES ('IGNST','AJDZ',2,'RADJ',9,2,'CART1');   
+
+INSERT INTO WORK_PLAY_STAFF (UNIT_CODE, EMPLOYEE_CODE, ID_STA_PLA_STAFF, ID_PLAY, ID_FUNCTION, ID_TERM, ACTIVITY_CODE) 
+VALUES ('FCATS','RNQT',3,'RADJ',10,2,'AULA1'); 
+
+-- id_term, expense_code, id_expend_play, id_play, expend_date, 
+
+INSERT INTO expend_play (id_term, expense_code, id_play, expend_date)
+VALUES (2, 'GDVTC', 'RADJ', to_date('23/03/2022','DD/MM/YYYY'));
+
+
 
 /* SE LLENA STUDENT_ATTENDANCE */
 

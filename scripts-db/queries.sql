@@ -369,10 +369,12 @@ where p.id_play = c.id_play
 --Certificado Estudiante
 
 select p.title, 
+       s.student_names|| ' ' || s.student_surnames,
        e.names || ' '|| e.surnames, 
        t.term_desc, 
        c.character_name, 
-       s.email_address2
+       s.email_address2,
+       u.uni_name
 from play p, 
        employee e, 
        term t, 
@@ -381,12 +383,12 @@ from play p,
        character_student cs, 
        Stage_Play_Staff sps, 
        activity_list al,
-       work_play_staff wps       
+       work_play_staff wps,
+       unit u       
 where p.id_play = c.id_play
        and c.id_Character=cs.id_Character
        and c.id_play=cs.id_play
        and cs.student_code=s.student_code
-       and s.student_code='20172020068'
        and p.title='Romeo y Julieta'
        and sps.id_play=p.id_play
        and e.unit_code=sps.unit_code
@@ -397,4 +399,5 @@ where p.id_play = c.id_play
        and wps.activity_code='DRTR1'
        and al.id_term=wps.id_term
        and al.activity_code=wps.activity_code
-       and t.id_term=al.id_term;
+       and t.id_term=al.id_term
+       and s.unit_code=u.unit_code;
