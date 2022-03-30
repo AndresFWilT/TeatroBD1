@@ -1,9 +1,9 @@
 # SISGETUD
 ## _Sistema de gestion de teatros de la Universidad Distrital_
 ### Creadores
-Andres Felipe Wilches Torres
-Cristian Felipe Ovalles Ramirez
-Josue Alexander Nuñez Prada
+- Andres Felipe Wilches Torres
+- Cristian Felipe Ovalles Ramirez
+- Josue Alexander Nuñez Prada
 
 Este es un proyecto aprendizaje desarrollado durante la materia de Bases de datos I, con el se pretende gestionar los teatros, las funciones, los gastos y tener un control sobre las actividades que realizan todas las personas con vinculo con los teatros de la universidad.
 
@@ -50,4 +50,19 @@ El aplicativo usa un metodo para obtener las credenciales de acceso a la base de
   "port": "1521",
   "db": "tud"
 }
+```
+### Creacion de PDF's
+Para que la funcion de crear PDF's funcione de manera correcta hay que tener en cuenta la libreria **weasyprint**, sin embargo hay que tener en cuenta el SO en el que se va a desplegar el servidor, o en donde este instalado el programa.
+
+**WINDOWS**
+
+Si el sistema operativo es windows, primero se debe instalar GTK3, una dependencia vital para weasyprint, que se puede conseguir del siguiente repo: [GTK3](https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases).
+
+Ademas de la instalacion, se debe verificar que se instale en el disco duro o la memoria en donde se va a alojar la aplicacion, ademas de que se agregue el path en las variables de entorno del sistema como del usuario.
+
+**Linux**
+
+La instalacion fue mas sencilla, ya que solo requirio de instalar en el entorno virtual la libreria weasiprint, esto con el comando
+```
+  pip install weasiprint
 ```
