@@ -60,7 +60,7 @@ Si el sistema operativo es windows, primero se debe instalar GTK3, una dependenc
 
 Ademas de la instalacion, se debe verificar que se instale en el disco duro o la memoria en donde se va a alojar la aplicacion, ademas de que se agregue el path en las variables de entorno del sistema como del usuario.
 
-**Linux**
+**LINUX**
 
 La instalacion fue mas sencilla, ya que solo requirio de instalar en el entorno virtual la libreria weasiprint, esto con el comando
 ```
