@@ -154,3 +154,15 @@ SELECT P.title
                                 AND STS.unit_code = E.unit_code
                                 AND P.state = 1
                                 AND E.employee_code = '51915567';
+
+-- Obra tipo obra, dramaturgo
+SELECT P.title "Titulo", PW.PLAYWRIGHT_NAME "Dramaturgo", TP.name_type_play "Tipo obra", C.country_name "Pais"
+FROM play P, PLAYWRIGHT PW, type_play TP, country C
+WHERE P.id_playwright = PW.id_playwright
+  AND TP.id_type_play = P.id_type_play
+  AND P.country_code = C.country_code;
+
+
+SELECT DISTINCT C.character_name "Personaje", P.title "Obra"
+FROM character C, play P
+WHERE P.id_play = C.id_play;
