@@ -1,3 +1,10 @@
+
+/* 
+-----------------------------
+fecha finalizada
+-----------------------------
+*/
+
 /* ID_TYPE_PLAY, NAME_TYPE_PLAY*/
 
 INSERT INTO type_play (name_type_play) VALUES ('Drama');
@@ -140,32 +147,36 @@ INSERT INTO modality VALUES ('FN','Función');
 
 /*ID_PLAY, ID_FUNCTION, ID_TYPE_MODALITY, THEATER_CODE, FUNCTION_DATE, START_TIME, END_TIME*/
 INSERT INTO function 
-VALUES ('RADJ',0001,'CV','TLF',to_date('25/03/2022','DD/MM/YYYY'),to_date('25/03/2022 08:00', 'DD/MM/YYYY hh24:mi'),to_date('25/03/2022 10:00', 'DD/MM/YYYY hh24:mi'));
+VALUES ('RADJ',0001,'CV','TLF',to_date('25/01/2022','DD/MM/YYYY'),to_date('25/01/2022 08:00', 'DD/MM/YYYY hh24:mi'),to_date('25/01/2022 10:00', 'DD/MM/YYYY hh24:mi'));
 INSERT INTO function 
-VALUES ('RADJ',0002,'SY','LEO',to_date('29/03/2022','DD/MM/YYYY'),to_date('29/03/2022 08:00', 'DD/MM/YYYY hh24:mi'),to_date('29/03/2022 10:00', 'DD/MM/YYYY hh24:mi'));
+VALUES ('RADJ',0002,'SY','LEO',to_date('29/01/2022','DD/MM/YYYY'),to_date('29/01/2022 08:00', 'DD/MM/YYYY hh24:mi'),to_date('29/01/2022 10:00', 'DD/MM/YYYY hh24:mi'));
 INSERT INTO function 
-VALUES ('RADJ',0003,'SY','CTC',to_date('01/04/2022','DD/MM/YYYY'),to_date('01/04/2022 08:00', 'DD/MM/YYYY hh24:mi'),to_date('01/04/2022 10:00', 'DD/MM/YYYY hh24:mi'));
+VALUES ('RADJ',0003,'SY','CTC',to_date('01/02/2022','DD/MM/YYYY'),to_date('01/02/2022 08:00', 'DD/MM/YYYY hh24:mi'),to_date('01/02/2022 10:00', 'DD/MM/YYYY hh24:mi'));
 INSERT INTO function 
-VALUES ('RADJ',0004,'SY','LCD',to_date('04/04/2022','DD/MM/YYYY'),to_date('04/04/2022 08:00', 'DD/MM/YYYY hh24:mi'),to_date('04/04/2022 10:00', 'DD/MM/YYYY hh24:mi'));
+VALUES ('RADJ',0004,'SY','LCD',to_date('04/02/2022','DD/MM/YYYY'),to_date('04/02/2022 08:00', 'DD/MM/YYYY hh24:mi'),to_date('04/02/2022 10:00', 'DD/MM/YYYY hh24:mi'));
 INSERT INTO function 
-VALUES ('RADJ',0005,'SY','TLF',to_date('07/04/2022','DD/MM/YYYY'),to_date('07/04/2022 08:00', 'DD/MM/YYYY hh24:mi'),to_date('07/04/2022 10:00', 'DD/MM/YYYY hh24:mi'));
+VALUES ('RADJ',0005,'SY','TLF',to_date('07/02/2022','DD/MM/YYYY'),to_date('07/02/2022 08:00', 'DD/MM/YYYY hh24:mi'),to_date('07/02/2022 10:00', 'DD/MM/YYYY hh24:mi'));
 INSERT INTO function 
-VALUES ('RADJ',0006,'SY','LEO',to_date('11/04/2022','DD/MM/YYYY'),to_date('11/04/2022 08:00', 'DD/MM/YYYY hh24:mi'),to_date('11/04/2022 10:00', 'DD/MM/YYYY hh24:mi'));
+VALUES ('RADJ',0006,'SY','LEO',to_date('11/02/2022','DD/MM/YYYY'),to_date('11/02/2022 08:00', 'DD/MM/YYYY hh24:mi'),to_date('11/02/2022 10:00', 'DD/MM/YYYY hh24:mi'));
 INSERT INTO function 
-VALUES ('RADJ',0007,'SY','CTC',to_date('14/04/2022','DD/MM/YYYY'),to_date('14/04/2022 08:00', 'DD/MM/YYYY hh24:mi'),to_date('14/04/2022 10:00', 'DD/MM/YYYY hh24:mi'));
+VALUES ('RADJ',0007,'SY','CTC',to_date('14/02/2022','DD/MM/YYYY'),to_date('14/02/2022 08:00', 'DD/MM/YYYY hh24:mi'),to_date('14/02/2022 10:00', 'DD/MM/YYYY hh24:mi'));
 INSERT INTO function 
-VALUES ('RADJ',0008,'FN','LCD',to_date('22/04/2022','DD/MM/YYYY'),to_date('22/04/2022 18:00', 'DD/MM/YYYY hh24:mi'),to_date('22/04/2022 20:00', 'DD/MM/YYYY hh24:mi'));
+VALUES ('RADJ',0008,'FN','LCD',to_date('22/02/2022','DD/MM/YYYY'),to_date('22/02/2022 18:00', 'DD/MM/YYYY hh24:mi'),to_date('22/02/2022 20:00', 'DD/MM/YYYY hh24:mi'));
 INSERT INTO function 
-VALUES ('RADJ',0009,'FN','LEO',to_date('29/04/2022','DD/MM/YYYY'),to_date('29/04/2022 18:00', 'DD/MM/YYYY hh24:mi'),to_date('29/04/2022 20:00', 'DD/MM/YYYY hh24:mi'));
+VALUES ('RADJ',0009,'FN','LEO',to_date('29/02/2022','DD/MM/YYYY'),to_date('29/02/2022 18:00', 'DD/MM/YYYY hh24:mi'),to_date('29/02/2022 20:00', 'DD/MM/YYYY hh24:mi'));
 INSERT INTO function 
-VALUES ('RADJ',0010,'FN','CTC',to_date('06/05/2022','DD/MM/YYYY'),to_date('06/05/2022 18:00', 'DD/MM/YYYY hh24:mi'),to_date('06/05/2022 20:00', 'DD/MM/YYYY hh24:mi'));
+VALUES ('RADJ',0010,'FN','CTC',to_date('06/03/2022','DD/MM/YYYY'),to_date('06/03/2022 18:00', 'DD/MM/YYYY hh24:mi'),to_date('06/03/2022 20:00', 'DD/MM/YYYY hh24:mi'));
 
 /* ID_TYPE_UNIT, UNIT_TYPE_DESCRIPTION */
 
 INSERT INTO type_unit VALUES ('AC', 'Unidad academica');
 INSERT INTO type_unit VALUES ('AD', 'Unidad administrativa');
 
+
+
 /* UNIT_CODE, ID_TYPE_UNIT, DEPENDENCY_UNIT, UNI_NAME */
+
+
 INSERT INTO unit (unit_code, id_type_unit, uni_name) 
 VALUES ('RCTRA', 'AD', 'Rectoria');
 
@@ -229,7 +240,7 @@ VALUES ('20191014068', 'ATPYV', 'Daniela', 'Wilches', to_date('10/11/1995','DD/M
 
 INSERT INTO student 
 VALUES ('20191004125', 'ATMSC', 'Rosa', 'Ordoñez', to_date('18/11/1998','DD/MM/YYYY'), 
-         to_date('28/03/2022','DD/MM/YYYY'), 'rosa@gmail.com');
+         to_date('28/02/2022','DD/MM/YYYY'), 'rosa@gmail.com');
 
 INSERT INTO student 
 VALUES ('20171010058', 'ATPYV', 'Camila', 'Rincon', to_date('20/06/1999','DD/MM/YYYY'), 
@@ -250,6 +261,7 @@ VALUES ('20172020071', 'IGNST', 'Josue', 'Nuñez', to_date('08/06/1999','DD/MM/Y
 /* ID_CHARACTER_STUDENT, ID_PLAY, ID_CHARACTER, STUDENT_CODE, START_CHARACTER_DATE,
 END_CHARACTER_DATE */
 
+
 INSERT INTO character_student (id_play, id_character, student_code, start_character_date, 
                                end_character_date) 
 VALUES ('RADJ', 'RMMT', '20172020071', to_date('28/02/2022','DD/MM/YYYY'), 
@@ -269,6 +281,7 @@ INSERT INTO character_student (id_play, id_character, student_code, start_charac
                                end_character_date) 
 VALUES ('RADJ', 'JTCT', '20171010058', to_date('18/02/2022','DD/MM/YYYY'), 
         to_date('22/03/2022','DD/MM/YYYY'));
+
 
 INSERT INTO character_student (id_play, id_character, student_code, start_character_date, 
                                end_character_date) 
@@ -299,8 +312,6 @@ INSERT INTO character_student (id_play, id_character, student_code, start_charac
                                end_character_date) 
 VALUES ('HMLT', 'GTDS', '20172010070', to_date('15/10/2021','DD/MM/YYYY'), 
         to_date('02/12/2021','DD/MM/YYYY'));
-
-
 
 /* UNIT_CODE, EMPLOYEE_CODE, NAMES, SURNAMES, IDENTIFICATION_NUMBER, PHONE_NUMBER
 EMAIL_ADDRESS */
@@ -340,6 +351,7 @@ VALUES ('FCATS', 'LCLP', 'Lucia', 'Lopez', '1014894512', '3016597845', 'licu@ema
 
 INSERT INTO employee 
 VALUES ('FCATS', 'FNBJ', 'Fran', 'Bejarano', '79451245', '3225797982', 'fran@email.com');
+
 
 /* EXPENSE_LIST */
 --GASTO DE VIATICOS
