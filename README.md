@@ -1,19 +1,20 @@
 # SISGETUD
 ## _Sistema de gestion de teatros de la Universidad Distrital_
 ### Creadores
+
 - Andres Felipe Wilches Torres
 - Cristian Felipe Ovalles Ramirez
 - Josue Alexander Nuñez Prada
 
 Este es un proyecto aprendizaje desarrollado durante la materia de Bases de datos I, con el se pretende gestionar los teatros, las funciones, los gastos y tener un control sobre las actividades que realizan todas las personas con vinculo con los teatros de la universidad.
 
-## Tecnologias utilizadas
+## Tecnologias utilizadas:
 
 - Flask (framework de desarrollo web con Python)
 - Bootstrap (framework de frontend)
 - Oracle Database (21c Express Edition)
 
-## Instalación
+## Instalación:
 
 Para ejecutar el programa se debe tener instalado python, ademas de ciertas librerias instaladas, antes de instalarlas es recomentable crear un ambiente virtual de python en donde se almacenaran las librerias necesarias para ejecutar el programa. Las siguentes son las instrucciones para el sistema operativo Windows.
 
@@ -36,7 +37,8 @@ Para ejecutar el servidor ejecutamos el archivo app.py
 ```sh
 python app.py
 ```
-### Base de datos
+### Base de datos:
+
 Para crear la base de datos, en la carpeta llamada scripts-db se encuentra el scrip llamado creation_db. Para ejecutarlo desde la consola que nos ofrece oracle usamos:
 ```sh
 start (unicacion del archivo)/creation_db
@@ -51,7 +53,8 @@ El aplicativo usa un metodo para obtener las credenciales de acceso a la base de
   "db": "tud"
 }
 ```
-### Creacion de PDF's
+### Creacion de PDF's:
+
 Para que la funcion de crear PDF's funcione de manera correcta hay que tener en cuenta la libreria **weasyprint**, sin embargo hay que tener en cuenta el SO en el que se va a desplegar el servidor, o en donde este instalado el programa.
 
 **WINDOWS**
@@ -62,7 +65,11 @@ Ademas de la instalacion, se debe verificar que se instale en el disco duro o la
 
 **LINUX**
 
-La instalacion fue mas sencilla, ya que solo requirio de instalar en el entorno virtual la libreria weasiprint, esto con el comando
+La instalacion fue mas sencilla, ya que solo requirio de instalar en el entorno virtual la libreria weasyprint, esto con el comando
 ```
   pip install weasiprint
 ```
+
+### Modelo base de datos:
+
+Para la creacion del modelo de la base de datos, se utilizo PowerDesigner V16.7. (version de prueba)
