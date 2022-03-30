@@ -1,6 +1,5 @@
  /*ID_WORK_PL_STA, UNIT_CODE, EMPLOYEE_CODE, ID_STA_PLA_STAFF, ID_PLAY, ID_FUNCTION, ID_TERM, ACTIVITY_CODE */
- select                                                                             
-
+                                                                        
 INSERT INTO WORK_PLAY_STAFF (UNIT_CODE, EMPLOYEE_CODE, ID_STA_PLA_STAFF, ID_PLAY, ID_FUNCTION, ID_TERM, ACTIVITY_CODE) 
 VALUES ('IGNST','SNOD',1,'RADJ',8,2,'DRTR1');                                                                                      
 
