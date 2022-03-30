@@ -163,7 +163,7 @@ VALUES ('RADJ',0007,'SY','CTC',to_date('14/02/2022','DD/MM/YYYY'),to_date('14/02
 INSERT INTO function 
 VALUES ('RADJ',0008,'FN','LCD',to_date('22/02/2022','DD/MM/YYYY'),to_date('22/02/2022 18:00', 'DD/MM/YYYY hh24:mi'),to_date('22/02/2022 20:00', 'DD/MM/YYYY hh24:mi'));
 INSERT INTO function 
-VALUES ('RADJ',0009,'FN','LEO',to_date('29/02/2022','DD/MM/YYYY'),to_date('29/02/2022 18:00', 'DD/MM/YYYY hh24:mi'),to_date('29/02/2022 20:00', 'DD/MM/YYYY hh24:mi'));
+VALUES ('RADJ',0009,'FN','LEO',to_date('28/02/2022','DD/MM/YYYY'),to_date('28/02/2022 18:00', 'DD/MM/YYYY hh24:mi'),to_date('28/02/2022 20:00', 'DD/MM/YYYY hh24:mi'));
 INSERT INTO function 
 VALUES ('RADJ',0010,'FN','CTC',to_date('06/03/2022','DD/MM/YYYY'),to_date('06/03/2022 18:00', 'DD/MM/YYYY hh24:mi'),to_date('06/03/2022 20:00', 'DD/MM/YYYY hh24:mi'));
 

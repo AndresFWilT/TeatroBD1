@@ -253,6 +253,7 @@ def loginTeacher():
                                     AND E.employee_code = '{employee[0][4]}'"""
                 cur.execute(sqlGetPlay)
                 play = cur.fetchall()
+                print(play)
                 # closing cursor
                 cur.close()
                 # closing connection
@@ -267,6 +268,7 @@ def loginTeacher():
                         play = play[0][0]
                         session["title"] = play
                     else:
+                        session["title"] = "No hay obras activas"
                         play = ""
                     employee = {
                       "employee_data": employee[0],
@@ -326,6 +328,7 @@ def loginTeacher():
             if len(play)>0:
                 play = play[0][0]
                 session["title"] = play
+                print(play)
             else:
                 play = ""
             employee = {
@@ -370,12 +373,14 @@ def assign_date(occupedDate):
 
 # Check availability of attendance button
 def verify_button_attendance(date):
-    date = '29/03/2022 09:00'
-    sqlGetFunction = f"""SELECT id_play, id_function
-                         FROM function
-                         WHERE function_date = to_date('{date[:10]}', 'DD/MM/YYYY')
-                           AND start_time <= (to_date('{date}', 'DD/MM/YYYY HH24:MI'))
-                           AND end_time >= (to_date('{date}', 'DD/MM/YYYY HH24:MI'))"""
+    date = '25/01/2022 09:00'
+    sqlGetFunction = f"""SELECT F.id_play, F.id_function
+                         FROM function F, play P
+                         WHERE F.function_date = to_date('{date[:10]}', 'DD/MM/YYYY')
+                           AND F.start_time <= (to_date('{date}', 'DD/MM/YYYY HH24:MI'))
+                           AND F.end_time >= (to_date('{date}', 'DD/MM/YYYY HH24:MI'))
+                           AND P.id_play = F.id_play
+                           AND P.state = 1"""
     cdtls = get_credentials_db()
     try:
         connection = cx_Oracle.connect(
@@ -398,15 +403,17 @@ def verify_button_attendance(date):
 
 # Check availability of travel expenses button
 def verify_button_tra_exp(date):
-    date = '07/05/2022 09:00'
+    #date = '07/05/2022 09:00'
     _id_play = session["id_play"]
-    sqlGetFunction = f"""SELECT id_function
-                         FROM function
-                         WHERE function_date = (SELECT max(function_date)
+    sqlGetFunction = f"""SELECT F.id_function
+                         FROM function F, play P
+                         WHERE F.function_date = (SELECT max(function_date)
                                                 FROM function
                                                 WHERE id_play = '{_id_play}')
-                           AND id_play = '{_id_play}'
-                           AND function_date < to_date('{date[:10]}', 'DD/MM/YYYY')"""
+                           AND F.id_play = '{_id_play}'
+                           AND F.function_date < to_date('{date[:10]}', 'DD/MM/YYYY')
+                           AND F.id_play = P.id_play
+                           AND P.state = 1"""
     cdtls = get_credentials_db()
     try:
         connection = cx_Oracle.connect(
@@ -425,12 +432,12 @@ def verify_button_tra_exp(date):
     return False
 
 def verify_play_state(date):
-    date = '07/05/2022'
+    #date = '07/05/2022'
     sqlGetPlay = f"""SELECT DISTINCT P.id_play
                      FROM play P, function F
-                     WHERE state = 1
+                     WHERE P.state = 1
                        AND F.id_play = P.id_play
-                       AND to_date('{date}', 'DD/MM/YYYY') > (SELECT max(function_date)
+                       AND to_date('{date[:10]}', 'DD/MM/YYYY') > (SELECT max(function_date)
                                                               FROM function
                                                               WHERE id_play = '{session["id_play"]}')"""
     cdtls = get_credentials_db()
@@ -444,11 +451,11 @@ def verify_play_state(date):
         cur.close()
         connection.close()
         if len(play) > 0:
-            return True
+            return False
     except cx_Oracle.Error as error:
         print('Error occurred: in verify play state' )
         print(error)
-    return False
+    return True
 
     
 ## Map to get the table of travel expenses
@@ -563,6 +570,7 @@ def liquidation_expenses():
                             s.student_code,
                             T.term_desc,
                             s.email_address2"""
+    sqlUpdateStatePlay = f"""UPDATE play SET state = 0 WHERE id_play = '{session["id_play"]}'"""
     cdtls = get_credentials_db()
     try:
         connection = cx_Oracle.connect(
@@ -575,9 +583,11 @@ def liquidation_expenses():
         dates_title = cur.fetchall()
         cur.execute(sqlGetStudents)
         students_info = cur.fetchall()
-        print(students_info)
+        cur.execute(sqlUpdateStatePlay)
+        connection.commit()
         cur.close()
         connection.close()
+        session["email"] = None;
         
     except cx_Oracle.Error as error:
         print('Error occurred: in verify play state' )
@@ -778,12 +788,13 @@ def search_student():
 
     # Get play's of student with ode
     sqlGetStudentPlays = f"""select p.title, s.student_code
-                            from play p, Character c, character_student cs, student S
+                            from play p, Character c, character_student cs, student S, student_attendance SA
                             where p.id_play = c.id_play
                                 and c.id_Character=cs.id_Character
                                 and c.id_play=cs.id_play
                                 and cs.student_code=s.student_code
-                                and s.student_code = {_code}"""
+                                and s.student_code = {_code}
+                                AND SA.student_code = S.student_code"""
     
     # Get play's of the teacher
     sqlGetPlays = f"""Select p.title
@@ -882,6 +893,7 @@ def certify_selected_student_play():
         # get the plays of student
         cur.execute(sqlGetInfo)
         info = cur.fetchall()
+        print(info)
 
         # get the plays of teacher
         cur.execute(sqlGetPlays)

@@ -143,3 +143,14 @@ where p.id_play=sps.id_play
        and sps.employee_code=e.employee_code
        and sps.unit_code=e.unit_code
        and e.email_address='sonia@correo.com';
+
+UPDATE play SET state = 0 WHERE id_play = ''
+
+
+SELECT P.title
+                             FROM play P, stage_play_staff STS, Employee E
+                             WHERE P.id_play = STS.id_play
+                                AND STS.employee_code = E.employee_code
+                                AND STS.unit_code = E.unit_code
+                                AND P.state = 1
+                                AND E.employee_code = '51915567';
