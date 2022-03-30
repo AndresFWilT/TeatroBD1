@@ -447,6 +447,7 @@ def table_travel_expenses():
         print(error)
     return render_template('settlement.html', students=students)
 
+
 # Map to make the liquidation and generation PDF for travel expenses
 @app.route('/TEGeneratePDF', methods=['POST'])
 def liquidation_expenses():
@@ -539,9 +540,10 @@ def liquidation_expenses():
         info, 'expenses',students_info)
     return redirect('/tExpenses')
 
+
 ## Function to create a PDF
 # directory of template, information, dependency, students info
-def PDF_creation(template, information, dependency,students):
+def PDF_creation(template, information, dependency, students):
     # first we take the name of the template
     template_name = template.split('/')[-1]
 
@@ -555,7 +557,7 @@ def PDF_creation(template, information, dependency,students):
 
     # select the name of the html file
     template = env.get_template(template_name)
-    html = template.render(information=information,students=students)
+    html = template.render(information=information, students=students)
 
     # then save into the dependency with the name of the file
     with open(saving_path + '.html', 'w') as f:
@@ -563,17 +565,17 @@ def PDF_creation(template, information, dependency,students):
 
     # Style conf
     css = CSS(string='''
-        @page {size: A4; margin: 1cm:}
-        th, td {border: 1px solid black;}
-    ''')
+                        @page {size: A4; margin: 1cm:}
+                        th, td {border: 1px solid black;}
+                    ''')
 
     # file convertion from html to PDF
-    HTML(saving_path + '.html').write_pdf(saving_path + '.pdf',
-                                              stylesheets=[css])
+    HTML(saving_path + '.html').write_pdf(saving_path + '.pdf', stylesheets=[css])
 
     # deleting the HTML
     if os.path.exists(saving_path + '.html'):
         os.remove(saving_path + '.html')
+
 
 # Map to go to view, certificates
 @app.route('/certificates', methods=['POST'])
@@ -604,6 +606,7 @@ def certificates():
         print('Error occurred:')
         print(error)
     return render_template('certificate.html', plays = plays)
+
 
 # Map to search student plays, w student code
 @app.route('/searchStudent', methods=['POST'])
@@ -650,6 +653,7 @@ def search_student():
         print('Error occurred:')
         print(error)
     return render_template('certificate.html', plays = plays,students = students)
+
 
 # Map to search student plays, w student code
 @app.route('/generateIndCerti', methods=['POST'])
@@ -753,8 +757,9 @@ def certify_selected_student_play():
 
     return render_template('certificate.html', plays = plays,message = message)
 
+
 # sending a mail for certification
-def sendMail(destination,header,information,dependency):
+def sendMail(destination, header, information, dependency):
 
     # use the environment loeader FilSystem for the directory templates
     play_name = information['obra'].replace(" ", "")
@@ -763,8 +768,8 @@ def sendMail(destination,header,information,dependency):
     saving_path = dependency + '/' + play_name
 
     msg = Message(header,
-                          sender=app.config['MAIL_USERNAME'],
-                          recipients=[destination])
+                  sender=app.config['MAIL_USERNAME'],
+                  recipients=[destination])
 
     #   html body message
     msg.html = render_template(
