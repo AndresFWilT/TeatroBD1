@@ -1,98 +1,123 @@
 {% extends "baseLogin.html" %}
 {% block title %}
-  {{ super() }}
-  Profesor
+{{ super() }}
+Profesor
 {% endblock title %}
 {% block content %}
-  {{ super() }}
-  <div class="card border-light mb-3" style="width: 18rem;">
-    <div class="card-header text-center">Datos del docente</div>
-    <ul class="list-group list-group-flush text-center">
-      <li class="list-group-item">Nombres: {{ employee["employee_data"][0] }}  {{ employee["employee_data"][1] }}</li>
-      <li class="list-group-item">Fecha actual: {{ employee["employee_data"][3] }}</li>
-    </ul>
+{{ super() }}
+<div class="card text-center">
+  <div class="card-header">
+    <b>Datos del docente</b>    
   </div>
-  <div class="mb-3">
-    <h1 class="text-center font-italic font-weight-bold">{{ session["title"] }}</h1>
-  </div>
-  <div class="col-auto p-5 text-center">
-    <div class="row text-center">
+  <div class="card-body">
+    <div class="row">
       <div class="col-sm-6">
         <div class="card">
           <div class="card-body">
-            <form action="/attendance" method="get">
-              <h5 class="card-title text-center">Asistencia</h5>
-              <p class="card-text">
-                Marca asistencia de tus estudiantes
-              </p>              
-              {% if employee['attendance'] %}
-                <div class="btn-group" role="group" aria-label="Basic example">
-                  <button class="btn btn-outline-success text-center text-uppercase"
-                          type="submit">ir a asistencia</button>
-                </div>
-              {% else %}
-                <div class="btn-group" role="group" aria-label="Basic example">
-                  <button class="btn btn-outline-success text-center text-uppercase"
-                          type="submit"
-                          disabled>ir a asistencia</button>
-                </div>
-              {% endif %}
-            </form>
+            <p class="card-text">Nombres: {{ employee["employee_data"][0] }} {{ employee["employee_data"][1] }}</p>
           </div>
         </div>
       </div>
-    </div>
-    <div class="row text-center">
       <div class="col-sm-6">
         <div class="card">
           <div class="card-body">
-            <form action="/tExpenses" method="get">
-              <h5 class="card-title text-center">Viaticos</h5>
-              <p class="card-text">
-                Visualiza a tus estudiantes y genera una liquidacion de viaticos
-              </p>
-              {% if employee['exp_tra'] %}
-                <div class="btn-group" role="group" aria-label="Basic example">
-                  <button class="btn btn-outline-primary text-center text-uppercase"
-                          type="submit">ir a viaticos</button>
-                </div>
-              {% else %}
-                <div class="btn-group" role="group" aria-label="Basic example">
-                  <button class="btn btn-outline-primary text-center text-uppercase"
-                          type="submit" disabled>ir a viaticos</button>
-                </div>
-              {% endif %}
-              
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row text-center">
-      <div class="col-sm-6">
-        <div class="card">
-          <div class="card-body">
-            <form action="/certificates" method="post">
-              <h5 class="card-title text-center">Certificados</h5>
-              <p class="card-text">
-                Certifica a los estudiantes de tus obras
-              </p>
-              {% if employee['certi'] %}
-                <div class="btn-group" role="group" aria-label="Basic example">
-                  <button class="btn btn-outline-warning text-center text-uppercase"
-                          type="submit" >ir a certificados</button>
-                </div>
-              {% else %}
-                <div class="btn-group" role="group" aria-label="Basic example">
-                  <button class="btn btn-outline-warning text-center text-uppercase"
-                          type="submit" disabled>ir a certificados</button>
-                </div>
-              {% endif %}
-              
-            </form>
+            <p class="card-text">Fecha actual: {{ employee["employee_data"][3] }}</p>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+<div class="card text-center">
+  <div class="card-header">
+    <b>Obra actual</b>
+  </div>
+  <div class="card-body">
+    <h3 class="font-italic font-weight-bold">{{ session["title"] }}</h3>
+  </div>
+</div>
+<br/>
+<div class="card text-center">
+  <div class="card-header">
+    <b>Funcionalidades</b>
+  </div>
+  <div class="card-body">
+    <div class="col-auto text-center">
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <form action="/attendance" method="get">
+                <h5 class="card-title">Asistencia</h5>
+                <p class="card-text">
+                  Marca asistencia de tus estudiantes
+                </p>
+                {% if employee['attendance'] %}
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <button class="btn btn-outline-success text-center text-uppercase" type="submit">ir a asistencia</button>
+                </div>
+                {% else %}
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <button class="btn btn-outline-success text-center text-uppercase" type="submit" disabled>ir a
+                    asistencia</button>
+                </div>
+                {% endif %}
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row text-center">
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <form action="/tExpenses" method="get">
+                <h5 class="card-title text-center">Viaticos</h5>
+                <p class="card-text">
+                  Visualiza a tus estudiantes y genera una liquidacion de viaticos
+                </p>
+                {% if employee['exp_tra'] %}
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <button class="btn btn-outline-primary text-center text-uppercase" type="submit">ir a viaticos</button>
+                </div>
+                {% else %}
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <button class="btn btn-outline-primary text-center text-uppercase" type="submit" disabled>ir a
+                    viaticos</button>
+                </div>
+                {% endif %}
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row text-center">
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <form action="/certificates" method="post">
+                <h5 class="card-title text-center">Certificados</h5>
+                <p class="card-text">
+                  Certifica a los estudiantes de tus obras
+                </p>
+                {% if employee['certi'] %}
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <button class="btn btn-outline-warning text-center text-uppercase" type="submit">ir a
+                    certificados</button>
+                </div>
+                {% else %}
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <button class="btn btn-outline-warning text-center text-uppercase" type="submit" disabled>ir a
+                    certificados</button>
+                </div>
+                {% endif %}
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock content %}

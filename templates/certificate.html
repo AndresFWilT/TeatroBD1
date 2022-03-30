@@ -9,7 +9,7 @@ Certificate
         <p>{{ message }}</p>
     {% endif %}
     {% if plays %}
-        <h1 class="text-center text-uppercase">Escoge alguna de las obras en la que participas</h1>
+        <h4 class="text-center text-uppercase">Escoge alguna de las obras en la que participas</h4>
         <table class="table table-bordered text-center">
         <thead class="thead-dark">
             <tr>
@@ -37,10 +37,10 @@ Certificate
         </tbody>
     </table>
     {% else %}
-        <h1 class="text-center text-uppercase">No se encontraron obras del docente</h1>
+        <h4 class="text-center text-uppercase">No se encontraron obras del docente</h4>
     {% endif %}
     </br></br>
-    <h2 class="text-center text-uppercase">Busca el codigo de un estudiante</h2>
+    <h4 class="text-center text-uppercase">Busca el codigo de un estudiante</h4>
     <div clas="form-group">
         <form action="/searchStudent" class="text-center" method="POST">
             <div class="input-group">
