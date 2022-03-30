@@ -32,25 +32,6 @@ FROM person P,
        student S
 WHERE P.idnumber = S.idnumber;
 -- Obtener todas las audiciones
-<<<<<<< HEAD
-SELECT PE.names, PL.title, A.code, A.dateaudition
-FROM person PE, play PL, audition A, student S
-WHERE PE.idnumber = S.idnumber and S.code = A.code and A.idplay = PL.idplay
-
--- Insertar Pais
-INSERT INTO country VALUES (44, 'United Kingdom')
-
--- Insertar tipos de obra
-INSERT INTO typeplay (nametypeplay) VALUES ('Melodrama')
--- Insertar una obra
-INSERT INTO play (idtypeplay, countrycode, title, releasedate) 
-VALUES (1, 44, 'Romeo y Julieta', to_date('31/10/1597','DD/MM/YYYY'))
-SELECT PE.names, PL.title, A.code, A.dateaudition 
-FROM person PE, play PL, audition A, student S 
-WHERE PE.idnumber = S.idnumber and S.code = A.code and A.idplay = PL.idplay 
-ORDER BY a.dateaudition DESC
-
-=======
 SELECT PE.names,
        PL.title,
        A.code,
@@ -85,7 +66,6 @@ WHERE PE.idnumber = S.idnumber
        and S.code = A.code
        and A.idplay = PL.idplay
 ORDER BY a.dateaudition DESC 
->>>>>>> 4b3a9e197f8f6bc0564120e51d04791a85df13a6
 --Login
 Select em.identification_number
 from employee em
@@ -369,6 +349,7 @@ where p.id_play = c.id_play
 --Certificado Estudiante
 
 select p.title, 
+       s.student_names|| ' ' || s.student_surnames,
        e.names || ' '|| e.surnames, 
        t.term_desc, 
        c.character_name, 

@@ -535,7 +535,7 @@ def liquidation_expenses():
         }
 
     # calls the function pdf_creation
-    PDF_creation('C:/proyectos/TeatroUdistrital/Flask/teatroudbd/templates/settlementTravelExpenses.html',
+    PDF_creation('templates\settlementTravelExpenses.html',
         info, 'expenses',students_info)
     return redirect('/tExpenses')
 
@@ -614,7 +614,7 @@ def search_student():
     _code = request.form["code"]
 
     # Get play's of student with ode
-    sqlGetStudentPlays = f"""select p.title
+    sqlGetStudentPlays = f"""select p.title, s.student_code
                             from play p, Character c, character_student cs, student S
                             where p.id_play = c.id_play
                                 and c.id_Character=cs.id_Character
@@ -659,7 +659,10 @@ def certify_selected_student_play():
 
     # Play name selected from template
     _play_name = request.form["play_name"]
-    print(_play_name)
+    
+    # student code
+    _code = request.form["code"]
+
     # Get play's of the teacher
     sqlGetPlays = f"""Select p.title
                         from  play p, Stage_Play_Staff sps, employee e
@@ -667,6 +670,44 @@ def certify_selected_student_play():
                         and sps.employee_code=e.employee_code
                         and sps.unit_code=e.unit_code
                         and e.email_address like '{session["email"]}'"""
+
+    # Get play's of the teacher
+    sqlGetInfo = f"""select p.title, 
+                        s.student_names|| ' ' || s.student_surnames,
+                        e.names || ' '|| e.surnames, 
+                        t.term_desc, 
+                        c.character_name, 
+                        s.email_address2,
+                        u.uni_name,
+                        e.identification_number
+                    from play p, 
+                        employee e, 
+                        term t, 
+                        student s, 
+                        Character c, 
+                        character_student cs, 
+                        Stage_Play_Staff sps, 
+                        activity_list al,
+                        work_play_staff wps,  
+                        unit u     
+                    where p.id_play = c.id_play
+                        and c.id_Character=cs.id_Character
+                        and c.id_play=cs.id_play
+                        and cs.student_code=s.student_code
+                        and s.student_code = '{_code}'
+                        and p.title = '{_play_name}'
+                        and sps.id_play=p.id_play
+                        and e.unit_code=sps.unit_code
+                        and e.employee_code=sps.employee_code
+                        and wps.unit_code=sps.unit_code
+                        and wps.employee_code=sps.employee_code
+                        and wps.id_sta_pla_staff=sps.id_sta_pla_staff
+                        and wps.activity_code = 'DRTR1'
+                        and al.id_term=wps.id_term
+                        and al.activity_code=wps.activity_code
+                        and t.id_term=al.id_term
+                        and s.unit_code=u.unit_code
+                """
     
     cdtls = get_credentials_db()
     try:
@@ -675,8 +716,31 @@ def certify_selected_student_play():
         )
         cur = connection.cursor()
         # get the plays of student
+        cur.execute(sqlGetInfo)
+        info = cur.fetchall()
+
+        # get the plays of teacher
         cur.execute(sqlGetPlays)
         plays = cur.fetchall()
+        
+        _email_destination = info[0][5]
+
+        information = {
+            "director": info[0][2],
+            "nombre": info[0][1],
+            "codigo": _code,
+            "obra": info[0][0],
+            "periodo": info[0][3],
+            "personaje": info[0][4],
+            "cedula": info[0][7],
+            "facultad": info[0][6],
+        }
+
+        students = [()]
+
+        PDF_creation('templates\certificationStudent.html',
+        information, 'certification',students)
+
         cur.close()
         connection.close()
         message = "correo electronico enviado"

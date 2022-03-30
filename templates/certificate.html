@@ -56,6 +56,7 @@ Certificate
     {% if students %}
         <form action="/generateIndCerti" method="POST">
             <div class="input-group">
+                <input type="hidden" class="form-control text-center" value="{{students[0][1]}}" placeholder="escribe el codigo" id="code" name="code" required>
                 <select class="browser-default custom-select text-center" name="play_name">
                     <option value="" disabled selected>Escoge una obra</option>
                     {% for i in range(0,students| length) %}      
